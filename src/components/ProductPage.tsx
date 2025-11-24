@@ -20,8 +20,6 @@ export default function ProductPage() {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [isStickyBarVisible, setIsStickyBarVisible] = useState(false);
     const [isAdding, setIsAdding] = useState(false);
-    const [selectedColor, setSelectedColor] = useState('Default');
-    const [selectedSize, setSelectedSize] = useState('Standard');
     const [hasAddedToCart, setHasAddedToCart] = useState(false);
 
     const actionButtonsRef = useRef<HTMLDivElement>(null);
@@ -175,7 +173,7 @@ export default function ProductPage() {
                             </div>
                         </div>
                         <div className="image-thumbnails">
-                            {images.map((img, index) => (
+                            {images.map((img: string, index: number) => (
                                 <div 
                                     key={index}
                                     className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
@@ -399,8 +397,8 @@ export default function ProductPage() {
                 <div className="sticky-product-info">
                     <img src={images[0]} alt="Product" className="sticky-product-img" />
                     <div className="sticky-product-details">
-                        <h4>Eco-Friendly Cushion Cover</h4>
-                        <p>Rs. 120.00</p>
+                        <h4>{product.title}</h4>
+                        <p>{formatPrice(selectedVariant?.price.amount)}</p>
                     </div>
                 </div>
                 <button 
@@ -424,15 +422,15 @@ export default function ProductPage() {
                     <div className="cart-item">
                         <img src={images[0]} alt="Product" className="cart-item-img" />
                         <div className="cart-item-details">
-                            <h3 className="cart-item-title">Eco-Friendly Cushion Cover</h3>
-                            <p className="cart-item-variant">Color: {selectedColor} / Size: {selectedSize}</p>
+                            <h3 className="cart-item-title">{product.title}</h3>
+                            <p className="cart-item-variant">{selectedVariant?.title}</p>
                             <div className="cart-item-controls">
                                 <div className="quantity-input" style={{border: '1px solid #eee'}}>
                                     <button className="cart-qty-btn" onClick={() => handleQuantityChange(-1)}>−</button>
                                     <input type="text" value={quantity} readOnly style={{width: '30px', height: '24px', fontSize: '13px'}} />
                                     <button className="cart-qty-btn" onClick={() => handleQuantityChange(1)}>+</button>
                                 </div>
-                                <span className="cart-item-price">Rs. 120.00</span>
+                                <span className="cart-item-price">{formatPrice(selectedVariant?.price.amount)}</span>
                             </div>
                         </div>
                     </div>
@@ -440,7 +438,7 @@ export default function ProductPage() {
                 <div className="cart-footer">
                     <div className="cart-subtotal">
                         <span>Subtotal</span>
-                        <span>Rs. {120 * quantity}.00</span>
+                        <span>{formatPrice((parseFloat(selectedVariant?.price.amount || '0') * quantity).toString())}</span>
                     </div>
                     <button className="checkout-btn" onClick={() => navigateTo('/cart')}>Proceed to Checkout</button>
                     <p style={{textAlign: 'center', fontSize: '12px', color: '#888', marginTop: '12px'}}>Shipping & taxes calculated at checkout</p>
