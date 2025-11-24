@@ -1,9 +1,8 @@
 import React from 'react';
-import Header from './Header.jsx';
+import { Header } from './Header.tsx';
 import { HeroSlideshow } from "./HeroSlideshow.jsx";
 import { FeatureIcons } from "./FeatureIcons";
 import { CategoryShowcase } from "./CategoryShowcase";
-import { ProductGrid } from "./ProductGrid";
 import { InfoBlocks } from "./InfoBlocks";
 import { MembershipPlans } from "./MembershipPlans";
 import { SplitContentSection } from "./SplitContentSection";
@@ -16,7 +15,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-white">
       {/* Header with Navigation */}
-      <Header />
+      <Header showCategories={true} />
 
       {/* Hero Slideshow */}
       <section id="hero">
@@ -29,16 +28,6 @@ const HomePage = () => {
       {/* Category Showcase */}
       <CategoryShowcase />
 
-      {/* Product Grid Section 1 */}
-      <section id="products">
-        <ProductGrid 
-          title="Featured Collection" 
-          subtitle="Explore our handpicked selection of sustainable products"
-          columns={5} 
-          itemCount={10} 
-        />
-      </section>
-
       {/* Info Blocks */}
       <section id="about">
         <InfoBlocks />
@@ -47,27 +36,11 @@ const HomePage = () => {
       {/* Membership Plans */}
       <MembershipPlans />
 
-      {/* Product Grid Section 2 */}
-      <ProductGrid 
-        title="Best Sellers" 
-        subtitle="Our most loved eco-friendly products"
-        columns={4} 
-        itemCount={8} 
-      />
-
       {/* Split Content Section */}
       <SplitContentSection />
 
       {/* Featured Banner */}
       <FeaturedBanner />
-
-      {/* Product Grid Section 3 */}
-      <ProductGrid 
-        title="New Arrivals" 
-        subtitle="Fresh designs, same sustainable values"
-        columns={5} 
-        itemCount={10} 
-      />
 
       {/* Testimonials */}
       <section id="testimonials">

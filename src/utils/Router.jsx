@@ -1,21 +1,29 @@
 import React, { useState, useEffect } from 'react';
 
+// Custom event for navigation
+const PUSH_STATE_EVENT = 'pushstate';
+
 // Simple Router Hook
 export const useRouter = () => {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 
   useEffect(() => {
-    const handlePopState = () => {
+    const handleLocationChange = () => {
       setCurrentPath(window.location.pathname);
     };
 
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
+    window.addEventListener('popstate', handleLocationChange);
+    window.addEventListener(PUSH_STATE_EVENT, handleLocationChange);
+    
+    return () => {
+      window.removeEventListener('popstate', handleLocationChange);
+      window.removeEventListener(PUSH_STATE_EVENT, handleLocationChange);
+    };
   }, []);
 
   const navigateTo = (path) => {
     window.history.pushState({}, '', path);
-    setCurrentPath(path);
+    window.dispatchEvent(new Event(PUSH_STATE_EVENT));
   };
 
   return {

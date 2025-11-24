@@ -2,7 +2,7 @@ import { ImageWithFallback } from "./figma/ImageWithFallback";
 
 export function SplitContentSection() {
   return (
-    <section className="py-16 bg-[#dad7cd]/30">
+    <section id="our-story" className="py-16 bg-[#dad7cd]/30">
       <div className="container mx-auto px-4">
         <div className="grid md:grid-cols-2 gap-12 items-center">
           {/* Image Side */}

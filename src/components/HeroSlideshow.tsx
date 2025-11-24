@@ -4,12 +4,11 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function HeroSlideshow() {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [imageErrors, setImageErrors] = useState<{[key: number]: boolean}>({});
 
   const slides = [
     {
-      // REPLACE WITH YOUR IMAGE: Import your first hero image here
-      // Example: import heroImage1 from "figma:asset/YOUR_IMAGE_HASH.png";
-      image: "https://images.unsplash.com/photo-1588766381125-c29bced9d2d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1cGN5Y2xlZCUyMGNyYWZ0cyUyMGhhbmRtYWRlfGVufDF8fHx8MTc2MzAzMTI1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
+      image: "/images/hero/hero-1.png",
       tag: "Sustainable Living Made Beautiful",
       title: "Transforming Waste into",
       highlight: "Wonderful Products",
@@ -18,8 +17,7 @@ export function HeroSlideshow() {
       secondaryCTA: "Learn More"
     },
     {
-      // REPLACE WITH YOUR IMAGE: Import your second hero image here
-      image: "https://images.unsplash.com/photo-1681418660057-3210f48689d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY28lMjBmcmllbmRseSUyMHdvcmtzcGFjZXxlbnwxfHx8fDE3NjMwMzE4OTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      image: "/images/hero/hero-2.png",
       tag: "Handcrafted Excellence",
       title: "Every Product Tells",
       highlight: "A Story",
@@ -28,8 +26,7 @@ export function HeroSlideshow() {
       secondaryCTA: "Our Story"
     },
     {
-      // REPLACE WITH YOUR IMAGE: Import your third hero image here
-      image: "https://images.unsplash.com/photo-1686946112728-5c4ad72aad55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMHByb2R1Y3RzJTIwZmxhdCUyMGxheXxlbnwxfHx8fDE3NjMwMzE4OTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      image: "/images/hero/hero-3.png",
       tag: "Join the Movement",
       title: "Building a",
       highlight: "Circular Economy",
@@ -38,6 +35,16 @@ export function HeroSlideshow() {
       secondaryCTA: "Join Workshop"
     }
   ];
+
+  const handleImageError = (index: number) => {
+    console.error(`Failed to load image: ${slides[index].image}`);
+    setImageErrors(prev => ({...prev, [index]: true}));
+  };
+
+  // Debug: Log image paths on mount
+  useEffect(() => {
+    console.log('Hero slides loaded:', slides.map(s => s.image));
+  }, []);
 
   // Auto-advance slides every 5 seconds
   useEffect(() => {
@@ -72,10 +79,14 @@ export function HeroSlideshow() {
                 : 'opacity-0 scale-105'
             }`}
           >
-            <ImageWithFallback
+            <img
               src={slide.image}
               alt={slide.title}
               className="w-full h-full object-cover"
+              onError={() => {
+                console.error(`Image failed to load: ${slide.image}`);
+                handleImageError(index);
+              }}
             />
           </div>
         ))}

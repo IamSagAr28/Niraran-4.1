@@ -1,0 +1,1534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details - Nivaran Upcyclers</title>
+    <style>
+        :root {
+            --primary: #3a5a40;
+            --primary-dark: #344e41;
+            --secondary: #a3b18a;
+            --accent: #588157;
+            --light: #dad7cd;
+            --bg-light: #fdf1ee;
+            --text-primary: #222222;
+            --text-secondary: #878787;
+            --border-color: #ddd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdf1ee;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fdf1ee;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        .icons {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .icon {
+            width: 22px;
+            height: 22px;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            color: var(--text-primary);
+        }
+
+        .icon:hover {
+            color: var(--accent);
+        }
+
+        /* Product Section */
+        .product-container {
+            display: grid;
+            grid-template-columns: 45% 1fr;
+            gap: 64px;
+            padding: 48px 0;
+            align-items: start;
+        }
+
+        .product-gallery {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            position: sticky;
+            top: 100px;
+        }
+
+        .product-image-main {
+            position: relative;
+            background-color: #f5f5f5;
+            border-radius: 12px;
+            overflow: hidden;
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: zoom-in;
+        }
+
+        .product-image-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .product-image-main:hover img {
+            transform: scale(1.05);
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 16px;
+            left: 16px;
+            right: auto;
+            background-color: var(--accent);
+            color: white;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        .image-carousel-controls {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .carousel-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #ddd;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .carousel-dot.active {
+            background-color: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .carousel-dot:hover {
+            border-color: var(--accent);
+        }
+
+        .image-thumbnails {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 12px;
+        }
+
+        .thumbnail {
+            aspect-ratio: 1;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            background-color: #f5f5f5;
+        }
+
+        .thumbnail:focus {
+            outline: 2px solid var(--primary-dark);
+            outline-offset: 2px;
+        }
+
+        .thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: opacity 0.2s;
+        }
+
+        .thumbnail:hover {
+            border-color: var(--secondary);
+        }
+
+        .thumbnail.active {
+            border-color: var(--primary-dark);
+        }
+
+        .product-info h1 {
+            font-size: 32px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.3;
+            letter-spacing: -0.5px;
+        }
+
+        .product-vendor {
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .product-rating {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            padding: 0;
+        }
+
+        .stars {
+            color: #eebb00;
+            font-size: 16px;
+            letter-spacing: 1px;
+        }
+
+        .rating-value {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        .rating-count {
+            color: var(--text-secondary);
+            font-size: 13px;
+            text-decoration: underline;
+            background: none;
+            padding: 0;
+        }
+
+        .product-price {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin-bottom: 24px;
+            font-size: 24px;
+            font-weight: 500;
+        }
+
+        .price-current {
+            color: var(--text-primary);
+            font-weight: 600;
+            font-size: 28px;
+        }
+
+        .price-original {
+            color: var(--text-secondary);
+            text-decoration: line-through;
+            font-size: 16px;
+            font-weight: 400;
+        }
+
+        .price-discount {
+            background-color: #e6f4ea;
+            color: #1e8e3e;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .key-benefits {
+            background-color: transparent;
+            border: none;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            padding: 24px 0;
+            margin: 32px 0;
+            border-radius: 0;
+        }
+
+        .key-benefits h3 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .benefits-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .benefits-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 15px;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        .benefits-list li:before {
+            content: "✓";
+            color: white;
+            background-color: var(--accent);
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .product-description {
+            color: var(--text-secondary);
+            margin-bottom: 24px;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .product-options {
+            margin-bottom: 32px;
+        }
+
+        .option-group {
+            margin-bottom: 24px;
+        }
+
+        .option-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .option-values {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .option-value {
+            min-width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            color: var(--text-primary);
+            font-weight: 500;
+        }
+
+        .option-value:hover {
+            border-color: var(--primary-dark);
+        }
+
+        .option-value.active {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+            color: white;
+        }
+        
+        .option-value:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .quantity-label {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+            width: fit-content;
+        }
+
+        .quantity-btn {
+            width: 44px;
+            height: 44px;
+            border: none;
+            background-color: white;
+            cursor: pointer;
+            font-size: 20px;
+            transition: background-color 0.2s ease;
+            color: var(--text-primary);
+            font-weight: 400;
+        }
+
+        .quantity-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .quantity-input input {
+            width: 50px;
+            height: 44px;
+            border: none;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 500;
+            background-color: white;
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+        
+        .quantity-input input::-webkit-outer-spin-button,
+        .quantity-input input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        .action-buttons {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 16px;
+            margin-bottom: 32px;
+        }
+
+        .btn {
+            padding: 16px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-dark);
+            color: white;
+            padding: 18px 32px;
+            font-size: 16px;
+            box-shadow: 0 4px 12px rgba(52, 78, 65, 0.2);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: #2a3f34;
+            box-shadow: 0 6px 16px rgba(52, 78, 65, 0.3);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-dark);
+            border: 1px solid var(--primary-dark);
+            width: 100%;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-dark);
+            color: white;
+        }
+
+        .trust-signals-box {
+            background: #f9f9f9;
+            border: none;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 32px;
+        }
+
+        .trust-signals-box h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 16px;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .trust-signals-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .trust-signal-item {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            text-align: left;
+            gap: 12px;
+        }
+
+        .trust-signal-icon {
+            width: 32px;
+            height: 32px;
+            background-color: transparent;
+            border-radius: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-dark);
+            font-size: 24px;
+            font-weight: 400;
+        }
+
+        .trust-signal-text {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-primary);
+            line-height: 1.4;
+        }
+
+        /* Sticky Cart Bar */
+        .sticky-cart-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background: white;
+            padding: 16px 24px;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 90;
+        }
+        
+        .sticky-cart-bar.visible {
+            transform: translateY(0);
+        }
+        
+        .sticky-product-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .sticky-product-img {
+            width: 48px;
+            height: 48px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+        
+        .sticky-product-details h4 {
+            font-size: 14px;
+            font-weight: 600;
+            margin: 0;
+            color: var(--text-primary);
+        }
+        
+        .sticky-product-details p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin: 0;
+        }
+
+        /* Cart Drawer */
+        .cart-drawer-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 200;
+            backdrop-filter: blur(2px);
+        }
+        
+        .cart-drawer {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100%;
+            max-width: 420px;
+            height: 100%;
+            background: white;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 201;
+            display: flex;
+            flex-direction: column;
+            box-shadow: -4px 0 24px rgba(0,0,0,0.1);
+        }
+        
+        .cart-drawer.open {
+            transform: translateX(0);
+        }
+        
+        .cart-drawer-overlay.open {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .cart-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .cart-header h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .close-cart {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            padding: 4px;
+        }
+        
+        .cart-items {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+        }
+        
+        .cart-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .cart-item-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            background-color: #f5f5f5;
+        }
+        
+        .cart-item-details {
+            flex: 1;
+        }
+        
+        .cart-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 4px;
+        }
+        
+        .cart-item-variant {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+        
+        .cart-item-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .cart-item-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+        }
+        
+        .cart-qty-btn {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--border-color);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .cart-footer {
+            padding: 24px;
+            border-top: 1px solid var(--border-color);
+            background-color: #fdfdfd;
+        }
+        
+        .cart-subtotal {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .checkout-btn:hover {
+            background-color: #2a3f34;
+        }
+
+        .product-info-footer {
+            display: flex;
+            gap: 24px;
+            padding: 24px 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .info-icon {
+            width: 24px;
+            height: 24px;
+            background-color: var(--secondary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .info-text {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        /* Tabs */
+        .product-tabs {
+            margin-top: 60px;
+            padding-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 40px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 32px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 16px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s ease;
+            margin-bottom: -2px;
+        }
+
+        .tab-btn.active {
+            color: var(--primary-dark);
+            border-bottom-color: var(--accent);
+        }
+
+        .tab-btn:hover {
+            color: var(--primary-dark);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .features-list {
+            list-style: none;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+        }
+
+        .features-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px 0;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            color: var(--accent);
+            font-weight: 600;
+            font-size: 18px;
+            margin-top: -2px;
+        }
+
+        /* Related Products */
+        .related-products {
+            margin-top: 80px;
+            padding-top: 60px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .related-products h2 {
+            font-size: 28px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 40px;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 24px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-card-image {
+            width: 100%;
+            aspect-ratio: 1;
+            object-fit: cover;
+        }
+
+        .product-card-info {
+            padding: 16px;
+        }
+
+        .product-card-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .product-card-price {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--accent);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-dark);
+            color: white;
+            margin-top: 80px;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .product-container {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .product-info h1 {
+                font-size: 28px;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .tab-buttons {
+                flex-direction: column;
+                gap: 0;
+                border-bottom: none;
+            }
+
+            .tab-btn {
+                border-bottom: 2px solid var(--border-color);
+                border-bottom-color: var(--border-color);
+                margin-bottom: 0;
+            }
+
+            .tab-btn.active {
+                border-bottom-color: var(--accent);
+            }
+
+            .features-list {
+                grid-template-columns: 1fr;
+            }
+
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .product-info-footer {
+                flex-direction: column;
+            }
+        }
+    </style>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "Product",
+      "name": "Eco-Friendly Cushion Cover",
+      "image": [
+        "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800",
+        "https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=800"
+       ],
+      "description": "Experience eco-friendly comfort with our handmade cushion covers crafted from upcycled pooja waste cloth materials.",
+      "sku": "NU-CC-001",
+      "brand": {
+        "@type": "Brand",
+        "name": "Nivaran Upcyclers"
+      },
+      "offers": {
+        "@type": "Offer",
+        "url": "https://nivaranupcyclers.in/products/eco-friendly-cushion-cover",
+        "priceCurrency": "INR",
+        "price": "120.00",
+        "priceValidUntil": "2025-12-31",
+        "availability": "https://schema.org/InStock",
+        "itemCondition": "https://schema.org/NewCondition"
+      },
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.5",
+        "reviewCount": "156"
+      }
+    }
+    </script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">Nivaran Upcyclers</a>
+                <nav class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/collections/all">Shop</a>
+                    <a href="/contact">Contact</a>
+                </nav>
+                <div class="icons">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                    </svg>
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Product Details -->
+    <main class="container">
+        <div class="product-container">
+            <!-- Product Image Gallery -->
+            <div class="product-gallery">
+                <div class="product-image-main">
+                    <img id="mainImage" src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800" alt="Eco-Friendly Cushion Cover" width="800" height="800" loading="eager">
+                    <div class="product-badge">New</div>
+                    <div class="image-carousel-controls">
+                        <button class="carousel-btn prev" onclick="changeImage(-1)" aria-label="Previous image">❮</button>
+                        <button class="carousel-btn next" onclick="changeImage(1)" aria-label="Next image">❯</button>
+                    </div>
+                    <div class="carousel-dots" id="carouselDots"></div>
+                </div>
+                <div class="image-thumbnails">
+                    <div class="thumbnail active" tabindex="0" role="button" aria-label="View image 1" onclick="selectImage(0)" onkeydown="if(event.key==='Enter') selectImage(0)">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=300" alt="View 1" width="150" height="150" loading="lazy">
+                    </div>
+                    <div class="thumbnail" tabindex="0" role="button" aria-label="View image 2" onclick="selectImage(1)" onkeydown="if(event.key==='Enter') selectImage(1)">
+                        <img src="https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=300" alt="View 2" width="150" height="150" loading="lazy">
+                    </div>
+                    <div class="thumbnail" tabindex="0" role="button" aria-label="View image 3" onclick="selectImage(2)" onkeydown="if(event.key==='Enter') selectImage(2)">
+                        <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=300" alt="View 3" width="150" height="150" loading="lazy">
+                    </div>
+                    <div class="thumbnail" tabindex="0" role="button" aria-label="View image 4" onclick="selectImage(3)" onkeydown="if(event.key==='Enter') selectImage(3)">
+                        <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300" alt="View 4" width="150" height="150" loading="lazy">
+                    </div>
+                    <div class="thumbnail" tabindex="0" role="button" aria-label="View image 5" onclick="selectImage(4)" onkeydown="if(event.key==='Enter') selectImage(4)">
+                        <img src="https://images.unsplash.com/photo-1583847268991-ba48f0e69f7f?w=300" alt="View 5" width="150" height="150" loading="lazy">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="product-info">
+                <p class="product-vendor">Nivaran Upcyclers</p>
+                <h1>Eco-Friendly Cushion Cover</h1>
+                
+                <div class="product-rating">
+                    <span class="stars">★★★★★</span>
+                    <span class="rating-count">(156 reviews)</span>
+                </div>
+
+                <div class="product-price">
+                    <span class="price-current">Rs. 120.00</span>
+                    <span class="price-original">Rs. 180.00</span>
+                    <span class="price-discount">-33%</span>
+                </div>
+
+                <p class="product-description">
+                    Experience eco-friendly comfort with our handmade cushion covers crafted from upcycled pooja waste cloth materials. Each piece is unique and adds a pop of color and patterns to your home while supporting sustainable living. Perfect for living rooms, bedrooms, or offices.
+                </p>
+
+                <!-- Key Benefits -->
+                <div class="key-benefits">
+                    <h3>Why Choose Our Cushion Cover?</h3>
+                    <ul class="benefits-list">
+                        <li><strong>Made from 100% Upcycled Materials</strong> – Reduces textile waste and supports sustainable practices</li>
+                        <li><strong>Hand-Crafted Quality</strong> – Each piece is unique and made with traditional artisan techniques</li>
+                        <li><strong>Durable & Washable</strong> – Built to last with easy machine wash care</li>
+                        <li><strong>Eco-Friendly</strong> – Zero harmful chemicals, completely sustainable production</li>
+                        <li><strong>Supports Artisans</strong> – Your purchase directly supports local artisan communities</li>
+                    </ul>
+                </div>
+
+                <!-- Product Options -->
+                <div class="product-options">
+                    <div class="option-group">
+                        <label class="option-label">Color</label>
+                        <div class="option-values">
+                            <button class="option-value active">Red</button>
+                            <button class="option-value">Red Patchwork</button>
+                            <button class="option-value">Lilac</button>
+                            <button class="option-value">Golden</button>
+                        </div>
+                    </div>
+
+                    <div class="option-group">
+                        <label class="option-label">Size</label>
+                        <div class="option-values">
+                            <button class="option-value active">Small (12x12)</button>
+                            <button class="option-value">Medium (16x16)</button>
+                            <button class="option-value">Large (20x20)</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quantity Selector -->
+                <div class="quantity-selector">
+                    <label class="quantity-label">Quantity</label>
+                    <div class="quantity-input">
+                        <button class="quantity-btn">−</button>
+                        <input type="number" value="1" min="1">
+                        <button class="quantity-btn">+</button>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-primary">Add to Cart</button>
+                    <button class="btn btn-secondary">Buy Now</button>
+                </div>
+
+                <!-- Trust Signals -->
+                <div class="trust-signals-box">
+                    <h3>Why Shop With Confidence</h3>
+                    <div class="trust-signals-grid">
+                        <div class="trust-signal-item">
+                            <div class="trust-signal-icon">🚚</div>
+                            <span class="trust-signal-text">Free Shipping on Orders Over Rs. 500</span>
+                        </div>
+                        <div class="trust-signal-item">
+                            <div class="trust-signal-icon">↩️</div>
+                            <span class="trust-signal-text">Easy Returns & Exchange Within 30 Days</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info Footer -->
+                <div class="product-info-footer">
+                    <div class="info-item">
+                        <div class="info-icon">✓</div>
+                        <span class="info-text">Free Shipping on Orders Over Rs. 500</span>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-icon">✓</div>
+                        <span class="info-text">Easy Returns & Exchange</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Tabs -->
+        <div class="product-tabs">
+            <div class="tab-buttons">
+                <button class="tab-btn active" onclick="switchTab(event, 'description')">Description</button>
+                <button class="tab-btn" onclick="switchTab(event, 'features')">Features & Benefits</button>
+                <button class="tab-btn" onclick="switchTab(event, 'shipping')">Shipping & Returns</button>
+            </div>
+
+            <div id="description" class="tab-content active">
+                <h3 style="color: var(--text-primary); margin-bottom: 16px;">Product Description</h3>
+                <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+                    Our Eco-Friendly Cushion Cover is more than just a home décor item – it's a statement about sustainability. Made from carefully selected upcycled pooja waste cloth materials, each cover is hand-crafted with attention to detail and quality.
+                </p>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    Perfect for adding warmth and personality to any room, these covers are durable, washable, and designed to last. By choosing our cushion covers, you're supporting artisans and helping reduce textile waste in landfills.
+                </p>
+            </div>
+
+            <div id="features" class="tab-content">
+                <h3 style="color: var(--text-primary); margin-bottom: 16px;">Features & Benefits</h3>
+                <ul class="features-list">
+                    <li>Made from 100% upcycled materials</li>
+                    <li>Hand-crafted with traditional techniques</li>
+                    <li>Completely washable and durable</li>
+                    <li>Eco-friendly and sustainable</li>
+                    <li>Unique patterns and colors</li>
+                    <li>Supports artisan communities</li>
+                </ul>
+            </div>
+
+            <div id="shipping" class="tab-content">
+                <h3 style="color: var(--text-primary); margin-bottom: 16px;">Shipping & Returns</h3>
+                <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 16px;">
+                    <strong>Shipping:</strong> Free shipping on all orders! Your items will be carefully packaged and shipped within 2-3 business days.
+                </p>
+                <p style="color: var(--text-secondary); line-height: 1.8;">
+                    <strong>Returns:</strong> Not satisfied? No problem! We offer easy returns within 30 days of purchase. Items must be unused and in original packaging.
+                </p>
+            </div>
+        </div>
+
+        <!-- Related Products -->
+        <section class="related-products">
+            <h2>You May Also Like</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1583847268991-ba48f0e69f7f?w=300" alt="Product" class="product-card-image">
+                    <div class="product-card-info">
+                        <p class="product-card-title">Bottle Cover</p>
+                        <p class="product-card-price">Rs. 80.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=300" alt="Product" class="product-card-image">
+                    <div class="product-card-info">
+                        <p class="product-card-title">File Cover</p>
+                        <p class="product-card-price">Rs. 100.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=300" alt="Product" class="product-card-image">
+                    <div class="product-card-info">
+                        <p class="product-card-title">Coin Pouch</p>
+                        <p class="product-card-price">Rs. 50.00</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=300" alt="Product" class="product-card-image">
+                    <div class="product-card-info">
+                        <p class="product-card-title">Wall Hanging</p>
+                        <p class="product-card-price">Rs. 950.00</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <ul>
+                        <li><a href="/pages/about-us">Our Story</a></li>
+                        <li><a href="/pages/contact">Contact Us</a></li>
+                        <li><a href="/pages/join-as-volunteer">Join as Volunteer</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Policies</h3>
+                    <ul>
+                        <li><a href="/pages/privacy-policy">Privacy Policy</a></li>
+                        <li><a href="/pages/terms-conditions">Terms & Conditions</a></li>
+                        <li><a href="/pages/shipping-and-delivery-policy">Shipping Policy</a></li>
+                        <li><a href="/pages/cancellation-and-refund">Returns & Refunds</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li><a href="tel:+919129455565">+91 9129455565</a></li>
+                        <li><a href="mailto:info@nivaranupcyclers.in">info@nivaranupcyclers.in</a></li>
+                        <li>Kanpur, India</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Follow Us</h3>
+                    <ul>
+                        <li><a href="https://instagram.com/nivaranupcyclers">Instagram</a></li>
+                        <li><a href="https://facebook.com/nivaranupcyclers">Facebook</a></li>
+                        <li><a href="https://twitter.com/nivaranupcycler">Twitter</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nivaran Upcyclers. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Sticky Cart Bar -->
+    <div class="sticky-cart-bar" id="stickyCartBar">
+        <div class="sticky-product-info">
+            <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=100" alt="Product" class="sticky-product-img">
+            <div class="sticky-product-details">
+                <h4>Eco-Friendly Cushion Cover</h4>
+                <p>Rs. 120.00</p>
+            </div>
+        </div>
+        <button class="btn btn-primary" style="width: auto; padding: 12px 24px;" onclick="addToCart()">Add to Cart</button>
+    </div>
+
+    <!-- Cart Drawer -->
+    <div class="cart-drawer-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+    <div class="cart-drawer" id="cartDrawer">
+        <div class="cart-header">
+            <h2>Shopping Cart</h2>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div class="cart-items">
+            <!-- Cart Item Example -->
+            <div class="cart-item">
+                <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Product" class="cart-item-img">
+                <div class="cart-item-details">
+                    <h3 class="cart-item-title">Eco-Friendly Cushion Cover</h3>
+                    <p class="cart-item-variant">Color: Red / Size: Small</p>
+                    <div class="cart-item-controls">
+                        <div class="quantity-input" style="border: 1px solid #eee;">
+                            <button class="cart-qty-btn">−</button>
+                            <input type="text" value="1" style="width: 30px; height: 24px; font-size: 13px;">
+                            <button class="cart-qty-btn">+</button>
+                        </div>
+                        <span class="cart-item-price">Rs. 120.00</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="cart-footer">
+            <div class="cart-subtotal">
+                <span>Subtotal</span>
+                <span>Rs. 120.00</span>
+            </div>
+            <button class="checkout-btn">Proceed to Checkout</button>
+            <p style="text-align: center; font-size: 12px; color: #888; margin-top: 12px;">Shipping & taxes calculated at checkout</p>
+        </div>
+    </div>
+
+    <script>
+        function switchTab(event, tabName) {
+            // Hide all tab contents
+            const tabs = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => tab.classList.remove('active'));
+
+            // Remove active class from all buttons
+            const buttons = document.querySelectorAll('.tab-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Handle option selection
+        const optionValues = document.querySelectorAll('.option-value');
+        optionValues.forEach(option => {
+            option.addEventListener('click', function() {
+                const group = this.parentElement;
+                group.querySelectorAll('.option-value').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Handle quantity change
+        const quantityBtns = document.querySelectorAll('.quantity-btn');
+        const quantityInput = document.querySelector('.quantity-input input');
+
+        quantityBtns.forEach((btn, index) => {
+            btn.addEventListener('click', function() {
+                let value = parseInt(quantityInput.value);
+                if (index === 0) {
+                    if (value > 1) quantityInput.value = value - 1;
+                } else {
+                    quantityInput.value = value + 1;
+                }
+            });
+        });
+
+        // Handle Add to Cart
+        function addToCart() {
+            toggleCart();
+        }
+
+        document.querySelector('.btn-primary').addEventListener('click', addToCart);
+
+        // Toggle Cart Drawer
+        function toggleCart() {
+            const drawer = document.getElementById('cartDrawer');
+            const overlay = document.getElementById('cartOverlay');
+            drawer.classList.toggle('open');
+            overlay.classList.toggle('open');
+            document.body.style.overflow = drawer.classList.contains('open') ? 'hidden' : '';
+        }
+
+        // Sticky Cart Bar Visibility
+        window.addEventListener('scroll', () => {
+            const stickyBar = document.getElementById('stickyCartBar');
+            const addToCartBtn = document.querySelector('.action-buttons');
+            if (addToCartBtn) {
+                const rect = addToCartBtn.getBoundingClientRect();
+                if (rect.bottom < 0) {
+                    stickyBar.classList.add('visible');
+                } else {
+                    stickyBar.classList.remove('visible');
+                }
+            }
+        });
+
+        // Handle Buy Now
+        document.querySelector('.btn-secondary').addEventListener('click', function() {
+            alert('Proceeding to checkout...');
+        });
+
+        // Image Gallery Carousel
+        let currentImageIndex = 0;
+        const images = [
+            'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800',
+            'https://images.unsplash.com/photo-1578500494198-246f612d03b3?w=800',
+            'https://images.unsplash.com/photo-1591195853828-11db59a44f6b?w=800',
+            'https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?w=800',
+            'https://images.unsplash.com/photo-1583847268991-ba48f0e69f7f?w=800'
+        ];
+
+        // Initialize carousel dots
+        function initCarouselDots() {
+            const dotsContainer = document.getElementById('carouselDots');
+            images.forEach((_, index) => {
+                const dot = document.createElement('button');
+                dot.className = `carousel-dot ${index === 0 ? 'active' : ''}`;
+                dot.onclick = () => selectImage(index);
+                dotsContainer.appendChild(dot);
+            });
+        }
+
+        function changeImage(direction) {
+            currentImageIndex += direction;
+            if (currentImageIndex >= images.length) {
+                currentImageIndex = 0;
+            } else if (currentImageIndex < 0) {
+                currentImageIndex = images.length - 1;
+            }
+            updateImage();
+        }
+
+        function selectImage(index) {
+            currentImageIndex = index;
+            updateImage();
+        }
+
+        function updateImage() {
+            document.getElementById('mainImage').src = images[currentImageIndex];
+            
+            // Update active thumbnail
+            const thumbnails = document.querySelectorAll('.thumbnail');
+            thumbnails.forEach((thumb, index) => {
+                thumb.classList.toggle('active', index === currentImageIndex);
+            });
+
+            // Update active dot
+            const dots = document.querySelectorAll('.carousel-dot');
+            dots.forEach((dot, index) => {
+                dot.classList.toggle('active', index === currentImageIndex);
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initCarouselDots);
+
+        // Touch Swipe Support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        const mainImageContainer = document.querySelector('.product-image-main');
+        
+        if (mainImageContainer) {
+            mainImageContainer.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, {passive: true});
+            
+            mainImageContainer.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, {passive: true});
+        }
+        
+        function handleSwipe() {
+            if (touchEndX < touchStartX - 50) {
+                changeImage(1); // Swipe Left -> Next
+            }
+            if (touchEndX > touchStartX + 50) {
+                changeImage(-1); // Swipe Right -> Prev
+            }
+        }
+    </script>
+</body>
+</html>

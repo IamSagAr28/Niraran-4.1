@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Cart - Nivaran Upcyclers</title>
+    <style>
+        :root {
+            --primary: #3a5a40;
+            --primary-dark: #344e41;
+            --secondary: #a3b18a;
+            --accent: #588157;
+            --light: #dad7cd;
+            --bg-light: #fdf1ee;
+            --text-primary: #222222;
+            --text-secondary: #555555;
+            --border-color: #e5e5e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #fdf1ee;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #fdf1ee;
+            border-bottom: 1px solid var(--border-color);
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-dark);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 15px;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent);
+        }
+
+        /* Cart Section */
+        .cart-page {
+            padding: 60px 0;
+            min-height: 60vh;
+        }
+
+        .cart-title {
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            color: var(--primary-dark);
+        }
+
+        .cart-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 48px;
+            align-items: start;
+        }
+
+        .cart-items-container {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+        }
+
+        .cart-header-row {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cart-item-row {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr 1fr;
+            align-items: center;
+            padding-bottom: 24px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .cart-item-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .product-col {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .cart-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 6px;
+            background-color: #f5f5f5;
+        }
+
+        .product-details h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+            color: var(--text-primary);
+        }
+
+        .product-variant {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .remove-btn {
+            background: none;
+            border: none;
+            color: #d76b64;
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+        }
+
+        .quantity-col {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-input {
+            display: flex;
+            align-items: center;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+            color: var(--text-primary);
+        }
+
+        .qty-btn:hover {
+            background-color: #f5f5f5;
+        }
+
+        .qty-val {
+            width: 40px;
+            height: 32px;
+            border: none;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .price-col, .total-col {
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .total-col {
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        /* Order Summary */
+        .order-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 24px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            font-size: 15px;
+            color: var(--text-secondary);
+        }
+
+        .summary-row.total {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            border-top: 1px solid var(--border-color);
+            padding-top: 16px;
+            margin-top: 16px;
+        }
+
+        .checkout-btn {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--primary-dark);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 24px;
+            transition: background-color 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #2a3f34;
+        }
+
+        .continue-shopping {
+            display: block;
+            text-align: center;
+            margin-top: 16px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .continue-shopping:hover {
+            color: var(--accent);
+        }
+
+        /* Footer */
+        .footer {
+            background-color: var(--primary-dark);
+            color: white;
+            margin-top: 80px;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-section h3 {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 12px;
+        }
+
+        .footer-section ul li a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: white;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .cart-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .cart-header-row {
+                display: none;
+            }
+            
+            .cart-item-row {
+                grid-template-columns: 1fr;
+                gap: 16px;
+                position: relative;
+            }
+            
+            .product-col {
+                width: 100%;
+            }
+            
+            .quantity-col, .price-col, .total-col {
+                justify-content: space-between;
+                display: flex;
+                width: 100%;
+            }
+            
+            .quantity-col:before {
+                content: "Quantity:";
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+            
+            .price-col:before {
+                content: "Price:";
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+            
+            .total-col:before {
+                content: "Total:";
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="/" class="logo">Nivaran Upcyclers</a>
+                <nav class="nav-links">
+                    <a href="/">Home</a>
+                    <a href="/collections/all">Shop</a>
+                    <a href="/contact">Contact</a>
+                </nav>
+                <div class="icons">
+                    <span>🛒 (2)</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Cart Page -->
+    <main class="container cart-page">
+        <h1 class="cart-title">Your Cart</h1>
+        
+        <div class="cart-grid">
+            <!-- Cart Items -->
+            <div class="cart-items-container">
+                <div class="cart-header-row">
+                    <div>Product</div>
+                    <div>Price</div>
+                    <div>Quantity</div>
+                    <div>Total</div>
+                </div>
+
+                <!-- Item 1 -->
+                <div class="cart-item-row">
+                    <div class="product-col">
+                        <img src="https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200" alt="Cushion Cover" class="cart-img">
+                        <div class="product-details">
+                            <h3>Eco-Friendly Cushion Cover</h3>
+                            <p class="product-variant">Color: Red / Size: Small</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+                    <div class="price-col">Rs. 120.00</div>
+                    <div class="quantity-col">
+                        <div class="quantity-input">
+                            <button class="qty-btn">−</button>
+                            <input type="text" value="1" class="qty-val">
+                            <button class="qty-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="total-col">Rs. 120.00</div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="cart-item-row">
+                    <div class="product-col">
+                        <img src="https://images.unsplash.com/photo-1583847268991-ba48f0e69f7f?w=200" alt="Bottle Cover" class="cart-img">
+                        <div class="product-details">
+                            <h3>Bottle Cover</h3>
+                            <p class="product-variant">Color: Blue</p>
+                            <button class="remove-btn">Remove</button>
+                        </div>
+                    </div>
+                    <div class="price-col">Rs. 80.00</div>
+                    <div class="quantity-col">
+                        <div class="quantity-input">
+                            <button class="qty-btn">−</button>
+                            <input type="text" value="2" class="qty-val">
+                            <button class="qty-btn">+</button>
+                        </div>
+                    </div>
+                    <div class="total-col">Rs. 160.00</div>
+                </div>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="order-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>Rs. 280.00</span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Calculated at checkout</span>
+                </div>
+                <div class="summary-row total">
+                    <span>Total</span>
+                    <span>Rs. 280.00</span>
+                </div>
+                <button class="checkout-btn">Proceed to Checkout</button>
+                <a href="/" class="continue-shopping">Continue Shopping</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About Us</h3>
+                    <ul>
+                        <li><a href="#">Our Story</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Policies</h3>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms & Conditions</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li>info@nivaranupcyclers.in</li>
+                        <li>Kanpur, India</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Nivaran Upcyclers. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

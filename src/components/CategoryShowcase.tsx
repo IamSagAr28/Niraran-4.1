@@ -1,24 +1,51 @@
+import { useEffect, useState } from 'react';
+import { useShopifyProducts } from '../hooks/useShopifyProducts';
+import { getOptimizedImageUrl } from '../shopify/client';
 import { ImageWithFallback } from "./figma/ImageWithFallback";
+import { useRouter } from '../utils/Router';
 
 export function CategoryShowcase() {
-  const categories = [
-    {
-      name: "Bags & Pouches",
-      image: "https://images.unsplash.com/photo-1758487424832-a53ae6cdefdb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGhhbmRtYWRlJTIwYmFnc3xlbnwxfHx8fDE3NjMwMzEyNTd8MA&ixlib=rb-4.1.0&q=80&w=1080"
-    },
-    {
-      name: "Notebooks & Journals",
-      image: "https://images.unsplash.com/photo-1668893973066-95b14ce86e71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxoYW5kbWFkZSUyMG5vdGVib29rc3xlbnwxfHx8fDE3NjMwMzEyNTh8MA&ixlib=rb-4.1.0&q=80&w=1080"
-    },
-    {
-      name: "Home Decor",
-      image: "https://images.unsplash.com/photo-1633878353628-5fc8b983325c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY28lMjBmcmllbmRseSUyMHByb2R1Y3RzfGVufDF8fHx8MTc2MzAxMDc4OHww&ixlib=rb-4.1.0&q=80&w=1080"
-    },
-    {
-      name: "Accessories",
-      image: "https://images.unsplash.com/photo-1665702860632-4dfcd4b2d869?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMGZhc2hpb24lMjBhY2Nlc3Nvcmllc3xlbnwxfHx8fDE3NjMwMzEyNTh8MA&ixlib=rb-4.1.0&q=80&w=1080"
+  const { products } = useShopifyProducts();
+  const { navigateTo } = useRouter();
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      // Group products by type and get first product from each type
+      const categoryMap = new Map();
+      
+      products.forEach((product: any) => {
+        const type = product.productType || 'Other';
+        if (!categoryMap.has(type)) {
+          categoryMap.set(type, product);
+        }
+      });
+
+      // Convert to array - show up to 4 categories, or if not enough types, show first 4 products
+      let categoriesArray = Array.from(categoryMap.values()).map((product: any) => ({
+        name: product.productType || product.title,
+        image: product.images.edges[0]?.node.url || '',
+        handle: product.handle
+      }));
+
+      // If we have less than 4 categories, add individual products as categories
+      if (categoriesArray.length < 4) {
+        const additionalProducts = products
+          .filter((p: any) => !categoriesArray.some(c => c.handle === p.handle))
+          .slice(0, 4 - categoriesArray.length)
+          .map((product: any) => ({
+            name: product.title,
+            image: product.images.edges[0]?.node.url || '',
+            handle: product.handle
+          }));
+        categoriesArray = [...categoriesArray, ...additionalProducts];
+      } else {
+        categoriesArray = categoriesArray.slice(0, 4);
+      }
+
+      setCategories(categoriesArray);
     }
-  ];
+  }, [products]);
 
   return (
     <section className="py-12 bg-white">
@@ -31,24 +58,32 @@ export function CategoryShowcase() {
 
         {/* Category Cards */}
         <div className="grid md:grid-cols-4 gap-6">
-          {categories.map((category) => (
-            <div key={category.name} className="group cursor-pointer">
-              <div className="aspect-[3/4] bg-[#dad7cd]/30 rounded-lg mb-4 overflow-hidden">
-                {/* REPLACE WITH YOUR CATEGORY IMAGE */}
-                <ImageWithFallback
-                  src={category.image}
-                  alt={category.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                />
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <div key={category.handle} className="group cursor-pointer">
+                <div className="aspect-[3/4] bg-[#dad7cd]/30 rounded-lg mb-4 overflow-hidden">
+                  <ImageWithFallback
+                    src={getOptimizedImageUrl(category.image, 400, 500)}
+                    alt={category.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+                <div className="text-center">
+                  <h3 className="text-lg mb-2 text-[#344e41]">{category.name}</h3>
+                  <button 
+                    onClick={() => navigateTo('/products')}
+                    className="mt-2 px-6 py-2 bg-[#588157] text-white text-sm hover:bg-[#3a5a40] rounded-lg transition-colors"
+                  >
+                    Explore
+                  </button>
+                </div>
               </div>
-              <div className="text-center">
-                <h3 className="text-lg mb-2 text-[#344e41]">{category.name}</h3>
-                <button className="mt-2 px-6 py-2 bg-[#588157] text-white text-sm hover:bg-[#3a5a40] rounded-lg transition-colors">
-                  Explore
-                </button>
-              </div>
+            ))
+          ) : (
+            <div className="col-span-4 text-center py-8 text-[#3a5a40]">
+              Loading categories...
             </div>
-          ))}
+          )}
         </div>
       </div>
     </section>

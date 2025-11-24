@@ -5,31 +5,31 @@ export function HeroSlideshow() {
 
   const slides = [
     {
-      image: "https://images.unsplash.com/photo-1588766381125-c29bced9d2d0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx1cGN5Y2xlZCUyMGNyYWZ0cyUyMGhhbmRtYWRlfGVufDF8fHx8MTc2MzAzMTI1Nnww&ixlib=rb-4.1.0&q=80&w=1080",
-      tag: "Sustainable Living",
-      title: "Transform Waste into",
-      highlight: "Wonder",
-      description: "We are a social impact startup working in pooja waste disposal management and production of upcycled handicrafts.",
+      image: "/images/hero/hero-1.png",
+      tag: "Sustainable Living Made Beautiful",
+      title: "Transforming Waste into",
+      highlight: "Wonderful Products",
+      description: "Discover our collection of handcrafted, eco-friendly products made from upcycled materials.",
       primaryCTA: "Shop Now",
       secondaryCTA: "Learn More"
     },
     {
-      image: "https://images.unsplash.com/photo-1681418660057-3210f48689d3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY28lMjBmcmllbmRseSUyMHdvcmtzcGFjZXxlbnwxfHx8fDE3NjMwMzE4OTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      tag: "Cultural Preservation",
-      title: "Revolutionizing Pooja",
-      highlight: "Waste Management",
-      description: "Transforming traditional practices into opportunities for positive social and environmental impact.",
+      image: "/images/hero/hero-2.png",
+      tag: "Handcrafted Excellence",
+      title: "Every Product Tells",
+      highlight: "A Story",
+      description: "Supporting local artisans while promoting environmental consciousness.",
       primaryCTA: "Explore Collection",
       secondaryCTA: "Our Story"
     },
     {
-      image: "https://images.unsplash.com/photo-1686946112728-5c4ad72aad55?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzdXN0YWluYWJsZSUyMHByb2R1Y3RzJTIwZmxhdCUyMGxheXxlbnwxfHx8fDE3NjMwMzE4OTl8MA&ixlib=rb-4.1.0&q=80&w=1080",
-      tag: "Circular Economy",
-      title: "Building a Healthier",
-      highlight: "Planet",
-      description: "Creating a circular economy where waste is reimagined as a valuable resource for sustainable living.",
+      image: "/images/hero/hero-3.png",
+      tag: "Join the Movement",
+      title: "Building a",
+      highlight: "Circular Economy",
+      description: "Each purchase contributes to a sustainable future and empowers local communities.",
       primaryCTA: "Get Started",
-      secondaryCTA: "Join As Volunteer"
+      secondaryCTA: "Join Workshop"
     }
   ];
 

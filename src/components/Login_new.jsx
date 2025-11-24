@@ -4,6 +4,7 @@ import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 const Login = ({ onClose }) => {
   const [isSignUp, setIsSignUp] = useState(false);
   const [formData, setFormData] = useState({
+    name: '',
     email: '',
     password: ''
   });
@@ -16,7 +17,7 @@ const Login = ({ onClose }) => {
     // Simulate API call
     setTimeout(() => {
       setLoading(false);
-      console.log('Form submitted:', formData);
+      console.log(isSignUp ? 'Signup submitted:' : 'Login submitted:', formData);
     }, 1000);
   };
 
@@ -48,10 +49,10 @@ const Login = ({ onClose }) => {
             </div>
             
             <h2 className="text-2xl font-bold mb-2">
-              Welcome Back!
+              {isSignUp ? 'Create Account' : 'Welcome Back!'}
             </h2>
             <p className="text-[#dad7cd]/90 text-sm">
-              Sign in to continue your sustainable journey
+              {isSignUp ? 'Join our community of upcyclers' : 'Sign in to continue your sustainable journey'}
             </p>
           </div>
         </div>
@@ -59,6 +60,24 @@ const Login = ({ onClose }) => {
         {/* Form Section */}
         <div className="px-8 py-8">
           <form onSubmit={handleSubmit} className="space-y-5">
+            {/* Name Field (Signup Only) */}
+            {isSignUp && (
+              <div className="animate-in fade-in slide-in-from-top-4 duration-300">
+                <label className="block text-sm text-[#588157]/80 mb-2 flex items-center gap-2">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                  Full Name
+                </label>
+                <input
+                  type="text"
+                  placeholder="Enter your full name"
+                  value={formData.name}
+                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  className="w-full px-4 py-3 rounded-lg border border-[#dad7cd]/60 text-gray-700 placeholder:text-gray-400 focus:border-[#588157] focus:outline-none focus:ring-1 focus:ring-[#588157]/20 transition-all"
+                  required
+                />
+              </div>
+            )}
+
             {/* Email Field */}
             <div>
               <label className="block text-sm text-[#588157]/80 mb-2 flex items-center gap-2">
@@ -116,7 +135,7 @@ const Login = ({ onClose }) => {
               disabled={loading}
               className="w-full bg-[#588157] text-white py-3.5 rounded-lg font-semibold hover:bg-[#3a5a40] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 shadow-md hover:shadow-lg"
             >
-              {loading ? 'Signing In...' : 'Sign In'}
+              {loading ? (isSignUp ? 'Creating Account...' : 'Signing In...') : (isSignUp ? 'Create Account' : 'Sign In')}
             </button>
 
             {/* Divider */}
@@ -150,9 +169,9 @@ const Login = ({ onClose }) => {
                 onClick={() => setIsSignUp(!isSignUp)}
                 className="text-sm text-gray-500"
               >
-                Don't have an account?
+                {isSignUp ? 'Already have an account?' : "Don't have an account?"}
                 <span className="text-[#588157] hover:text-[#3a5a40] font-semibold ml-1 transition-colors">
-                  Sign Up
+                  {isSignUp ? 'Sign In' : 'Sign Up'}
                 </span>
               </button>
             </div>
