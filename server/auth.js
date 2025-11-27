@@ -1,6 +1,8 @@
 const express = require('express');
 const { OAuth2Client } = require('google-auth-library');
-const { findOrCreateCustomer } = require('./shopify');
+const bcrypt = require('bcryptjs');
+const db = require('./database');
+const { findOrCreateCustomer, createCustomer } = require('./shopify');
 const router = express.Router();
 
 // Environment variables
@@ -18,6 +20,144 @@ const client = new OAuth2Client(
   GOOGLE_CLIENT_SECRET,
   GOOGLE_REDIRECT_URI
 );
+
+// Helper: Find or Create Local User
+function findOrCreateLocalUser(email, googleId, shopifyId, firstName, lastName) {
+  return new Promise((resolve, reject) => {
+    db.get('SELECT * FROM users WHERE email = ?', [email], (err, row) => {
+      if (err) return reject(err);
+      if (row) {
+        // Update existing user with missing IDs if needed
+        if ((googleId && !row.google_id) || (shopifyId && !row.shopify_customer_id)) {
+          db.run(
+            'UPDATE users SET google_id = COALESCE(?, google_id), shopify_customer_id = COALESCE(?, shopify_customer_id) WHERE id = ?',
+            [googleId, shopifyId, row.id],
+            (err) => {
+              if (err) console.error('Error updating user IDs:', err);
+            }
+          );
+        }
+        return resolve(row);
+      }
+
+      // Create new user
+      db.run(
+        'INSERT INTO users (email, google_id, shopify_customer_id, first_name, last_name) VALUES (?, ?, ?, ?, ?)',
+        [email, googleId, shopifyId, firstName, lastName],
+        function (err) {
+          if (err) return reject(err);
+          // Handle lastID for both SQLite (this.lastID) and Postgres (handled in wrapper)
+          const newId = this.lastID || 0; 
+          // Note: If Postgres wrapper doesn't return ID, we might need to fetch user by email again
+          if (newId === 0) {
+             db.get('SELECT * FROM users WHERE email = ?', [email], (err, newUser) => {
+                if (err) return reject(err);
+                resolve(newUser);
+             });
+          } else {
+             resolve({ id: newId, email, google_id: googleId, shopify_customer_id: shopifyId, first_name: firstName, last_name: lastName });
+          }
+        }
+      );
+    });
+  });
+}
+
+/**
+ * POST /auth/signup
+ * Local email/password signup
+ */
+router.post('/signup', async (req, res) => {
+  const { email, password, firstName, lastName } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: 'Email and password are required' });
+  }
+
+  try {
+    // 1. Check if user exists locally
+    db.get('SELECT id FROM users WHERE email = ?', [email], async (err, row) => {
+      if (err) return res.status(500).json({ error: 'Database error' });
+      if (row) return res.status(400).json({ error: 'User already exists' });
+
+      // 2. Create Shopify Customer
+      let shopifyCustomer;
+      try {
+        shopifyCustomer = await createCustomer({ firstName, lastName, email });
+      } catch (shopifyErr) {
+        console.error('Shopify creation failed, proceeding with local only:', shopifyErr.message);
+      }
+
+      // 3. Hash Password
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      // 4. Create Local User
+      db.run(
+        'INSERT INTO users (email, password_hash, first_name, last_name, shopify_customer_id) VALUES (?, ?, ?, ?, ?)',
+        [email, hashedPassword, firstName, lastName, shopifyCustomer?.id],
+        function (err) {
+          if (err) return res.status(500).json({ error: 'Failed to create user' });
+          
+          // Handle ID retrieval for both DB types
+          const finalizeUser = (id) => {
+             const user = {
+              id: id,
+              email,
+              firstName,
+              lastName,
+              shopifyCustomerId: shopifyCustomer?.id
+            };
+            req.session.user = user;
+            res.status(201).json({ message: 'User created', user });
+          };
+
+          if (this.lastID) {
+            finalizeUser(this.lastID);
+          } else {
+            // Fetch user again to get ID (Postgres fallback)
+            db.get('SELECT id FROM users WHERE email = ?', [email], (err, newUser) => {
+               if (err || !newUser) return res.status(500).json({ error: 'User creation verification failed' });
+               finalizeUser(newUser.id);
+            });
+          }
+        }
+      );
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+/**
+ * POST /auth/login
+ * Local email/password login
+ */
+router.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  db.get('SELECT * FROM users WHERE email = ?', [email], async (err, user) => {
+    if (err) return res.status(500).json({ error: 'Database error' });
+    if (!user || !user.password_hash) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    const validPassword = await bcrypt.compare(password, user.password_hash);
+    if (!validPassword) {
+      return res.status(401).json({ error: 'Invalid credentials' });
+    }
+
+    req.session.user = {
+      id: user.id,
+      email: user.email,
+      firstName: user.first_name,
+      lastName: user.last_name,
+      shopifyCustomerId: user.shopify_customer_id
+    };
+
+    res.json({ message: 'Logged in', user: req.session.user });
+  });
+});
 
 /**
  * GET /auth/google
@@ -67,18 +207,27 @@ router.get('/google/callback', async (req, res) => {
     // 3. Find or Create Shopify Customer
     const shopifyCustomer = await findOrCreateCustomer(payload);
 
-    // 4. Create Session
-    // We store minimal info in the secure cookie
+    // 4. Find or Create Local User
+    const localUser = await findOrCreateLocalUser(
+      payload.email,
+      payload.sub,
+      shopifyCustomer.id,
+      payload.given_name,
+      payload.family_name
+    );
+
+    // 5. Create Session
     req.session.user = {
-      id: shopifyCustomer.id,
-      email: shopifyCustomer.email,
-      firstName: shopifyCustomer.first_name,
-      lastName: shopifyCustomer.last_name,
-      googleId: payload.sub,
+      id: localUser.id,
+      email: localUser.email,
+      firstName: localUser.first_name,
+      lastName: localUser.last_name,
+      googleId: localUser.google_id,
       picture: payload.picture,
+      shopifyCustomerId: localUser.shopify_customer_id
     };
 
-    // 5. Redirect back to frontend
+    // 6. Redirect back to frontend
     res.redirect(`${CLIENT_URL}/?login=success`);
 
   } catch (error) {
@@ -104,10 +253,21 @@ router.get('/me', (req, res) => {
   if (!req.session || !req.session.user) {
     return res.status(401).json({ authenticated: false });
   }
-  res.json({
-    authenticated: true,
-    user: req.session.user,
-  });
+
+  // Fetch latest subscription status
+  db.get(
+    `SELECT status, current_period_end FROM subscriptions 
+     WHERE user_id = ? AND status IN ('active', 'trialing') 
+     ORDER BY created_at DESC LIMIT 1`,
+    [req.session.user.id],
+    (err, sub) => {
+      res.json({
+        authenticated: true,
+        user: req.session.user,
+        subscription: sub || null
+      });
+    }
+  );
 });
 
 module.exports = router;
