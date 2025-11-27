@@ -13,9 +13,47 @@ function HeroSlideshow() {
       color: 'white',
       position: 'relative'
     }
-  }, React.createElement('div', {
+  import React from 'react';
+  import { useRouter } from '../utils/Router';
     style: {
       maxWidth: '1200px',
+    const { navigateTo, currentPath } = useRouter();
+    const navigateToSection = (sectionId) => {
+      if (currentPath !== '/') {
+        navigateTo('/');
+        setTimeout(() => {
+          const el = document.getElementById(sectionId);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 300);
+      } else {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    };
+    const handlePrimaryCTA = (title) => {
+      const t = (title || '').toLowerCase();
+      if (t.includes('shop') || t.includes('explore') || t.includes('get started')) {
+        navigateTo('/products');
+        return;
+      }
+      navigateTo('/products');
+    };
+    const handleSecondaryCTA = (cta) => {
+      const t = (cta || '').toLowerCase();
+      if (t.includes('learn') || t.includes('mission') || t.includes('about')) {
+        navigateToSection('about');
+        return;
+      }
+      if (t.includes('our story') || t.includes('our-story')) {
+        navigateToSection('our-story');
+        return;
+      }
+      if (t.includes('workshop')) {
+        navigateToSection('workshops');
+        return;
+      }
+      navigateTo('/');
+    };
       margin: '0 auto',
       padding: '0 16px',
       zIndex: 10
@@ -75,7 +113,7 @@ function HeroSlideshow() {
           fontSize: '16px',
           cursor: 'pointer',
           fontWeight: '500'
-        }
+        }, onClick: () => handlePrimaryCTA('Shop Now')
       }, 'Shop Now'),
       React.createElement('button', {
         key: 'learn',
@@ -88,7 +126,7 @@ function HeroSlideshow() {
           fontSize: '16px',
           cursor: 'pointer',
           fontWeight: '500'
-        }
+        }, onClick: () => handleSecondaryCTA('Learn More')
       }, 'Learn More')
     ])
   ])));

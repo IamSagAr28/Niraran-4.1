@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from '../utils/Router';
 
 export function HeroSlideshow() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -51,6 +52,47 @@ export function HeroSlideshow() {
 
   const prevSlide = () => {
     setCurrentSlide(prev => (prev - 1 + slides.length) % slides.length);
+  };
+
+  const { navigateTo, currentPath } = useRouter();
+
+  const navigateToSection = (sectionId) => {
+    if (currentPath !== '/') {
+      navigateTo('/');
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    } else {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handlePrimaryCTA = (slideIndex) => {
+    const title = slides[slideIndex]?.primaryCTA?.toLowerCase() || '';
+    if (title.includes('shop') || title.includes('explore') || title.includes('get started')) {
+      navigateTo('/products');
+      return;
+    }
+    navigateTo('/products');
+  };
+
+  const handleSecondaryCTA = (slideIndex) => {
+    const cta = slides[slideIndex]?.secondaryCTA?.toLowerCase() || '';
+    if (cta.includes('learn') || cta.includes('mission') || cta.includes('about')) {
+      navigateToSection('about');
+      return;
+    }
+    if (cta.includes('our story') || cta.includes('our-story')) {
+      navigateToSection('our-story');
+      return;
+    }
+    if (cta.includes('join workshop') || cta.includes('workshop')) {
+      navigateToSection('workshops');
+      return;
+    }
+    navigateTo('/');
   };
 
   const currentSlideData = slides[currentSlide];
@@ -188,6 +230,7 @@ export function HeroSlideshow() {
                 transition: 'all 0.3s ease',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
               }}
+              onClick={() => handlePrimaryCTA(currentSlide)}
               onMouseOver={(e) => {
                 e.target.style.backgroundColor = '#a3b18a';
                 e.target.style.color = '#344e41';
@@ -211,6 +254,7 @@ export function HeroSlideshow() {
                 fontWeight: '500',
                 transition: 'all 0.3s ease'
               }}
+              onClick={() => handleSecondaryCTA(currentSlide)}
               onMouseOver={(e) => {
                 e.target.style.backgroundColor = 'white';
                 e.target.style.color = '#3a5a40';

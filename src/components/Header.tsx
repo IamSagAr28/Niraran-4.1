@@ -1,14 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Search, ShoppingBag, User, Menu, LogOut } from "lucide-react";
 import { useRouter } from "../utils/Router";
 import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
+import { useShopifyProducts } from "../hooks/useShopifyProducts";
+import { getOptimizedImageUrl } from "../shopify/client";
 
 export function Header({ showCategories = false }: { showCategories?: boolean }) {
   const { navigateTo, currentPath } = useRouter();
   const { itemCount } = useCart();
   const { user, isAuthenticated, logout } = useAuth();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { products, loading } = useShopifyProducts();
+  const [categories, setCategories] = useState<any[]>([]);
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      const categoryMap = new Map();
+      products.forEach((product: any) => {
+        // Use productType if available, otherwise fallback to first tag, or 'Other'
+        const type = product.productType || (product.tags && product.tags.length > 0 ? product.tags[0] : 'Other');
+        
+        if (type && !categoryMap.has(type)) {
+          categoryMap.set(type, {
+            name: type,
+            image: product.images.edges[0]?.node.url || ''
+          });
+        }
+      });
+
+      let categoriesArray = Array.from(categoryMap.values());
+
+      // If we have fewer than 8 categories, fill with individual products
+      if (categoriesArray.length < 8) {
+        const existingNames = new Set(categoriesArray.map(c => c.name));
+        const additionalProducts = products
+          .filter((p: any) => !existingNames.has(p.title))
+          .slice(0, 8 - categoriesArray.length)
+          .map((product: any) => ({
+            name: product.title,
+            image: product.images.edges[0]?.node.url || ''
+          }));
+        categoriesArray = [...categoriesArray, ...additionalProducts];
+      }
+
+      setCategories(categoriesArray);
+    }
+  }, [products]);
 
   const handleNav = (sectionId: string) => {
     if (currentPath !== '/') {
@@ -32,10 +70,10 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
           <div className="flex gap-6">
             <span>🌱 Transforming Waste into Beautiful Products | Free Shipping on Orders Above ₹999</span>
           </div>
-          <div className="flex gap-4">
-            <a href="#" className="hover:text-[#a3b18a] transition-colors">Track Order</a>
-            <a href="#" className="hover:text-[#a3b18a] transition-colors">Join Our Mission</a>
-            <a href="#" className="hover:text-[#a3b18a] transition-colors">Contact Us</a>
+              <div className="flex gap-4">
+                <button onClick={() => navigateTo('/track-order')} className="hover:text-[#a3b18a] transition-colors">Track Order</button>
+                <button onClick={() => handleNav('our-story')} className="hover:text-[#a3b18a] transition-colors">Join Our Mission</button>
+                <button onClick={() => handleNav('contact')} className="hover:text-[#a3b18a] transition-colors">Contact Us</button>
           </div>
         </div>
       </div>
@@ -90,13 +128,13 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
             </a>
             <button onClick={() => handleNav('about')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">About Us</button>
             <button onClick={() => handleNav('our-story')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Our Story</button>
-            <button onClick={() => handleNav('about')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Workshops</button>
+            <button onClick={() => handleNav('workshops')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Workshops</button>
             <button onClick={() => handleNav('contact')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Contact</button>
           </nav>
 
           {/* Action Icons */}
           <div className="flex gap-4 items-center">
-            <button className="text-[#344e41] hover:text-[#588157] transition-colors">
+            <button className="text-[#344e41] hover:text-[#588157] transition-colors" onClick={() => navigateTo('/products')} title="Search Products">
               <Search className="w-5 h-5" />
             </button>
             {isAuthenticated ? (
@@ -166,7 +204,7 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
               </button>
               <button onClick={() => handleNav('about')} className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2">About Us</button>
               <button onClick={() => handleNav('our-story')} className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2">Our Story</button>
-              <button onClick={() => handleNav('about')} className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2">Workshops</button>
+              <button onClick={() => handleNav('workshops')} className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2">Workshops</button>
               <button onClick={() => handleNav('contact')} className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2">Contact</button>
             </nav>
           </div>
@@ -177,63 +215,44 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
       {showCategories && (
         <div className="border-t border-[#e5e7eb] bg-[#f9f9f7]">
           <div className="container mx-auto px-4 py-6">
-            <div className="flex justify-center items-start gap-4 md:gap-12 overflow-x-auto pb-2 w-full scrollbar-hide">
-              {[
-                {
-                  name: "Wall Hangings",
-                  image: "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "Clutches & Pouches",
-                  image: "https://images.unsplash.com/photo-1590874103328-eac38a683ce7?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "Home Textiles",
-                  image: "https://images.unsplash.com/photo-1522758971460-1d21eed7dc1d?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "File Covers",
-                  image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "Festival Items",
-                  image: "https://images.unsplash.com/photo-1514222709107-a180c68d72b4?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "Diya Decorations",
-                  image: "https://images.unsplash.com/photo-1602826416379-4443633a40b0?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "Bangle Boxes",
-                  image: "https://images.unsplash.com/photo-1606293926075-69a00dbfde81?w=400&h=400&fit=crop&crop=center"
-                },
-                {
-                  name: "Bottle Covers",
-                  image: "https://images.unsplash.com/photo-1602143407151-01114192003f?w=400&h=400&fit=crop&crop=center"
-                }
-              ].map((category) => (
-                <button
-                  key={category.name}
-                  onClick={() => handleNav('products')}
-                  className="flex flex-col items-center gap-3 min-w-[80px] text-[#344e41] hover:text-[#588157] transition-all group"
-                >
-                  <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md border border-gray-100">
-                    <img 
-                      src={category.image} 
-                      alt={category.name}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      onError={(e) => {
-                        const target = e.target as HTMLImageElement;
-                        target.style.display = 'none';
-                        if (target.parentElement) {
-                          target.parentElement.innerHTML = '<div class="w-10 h-10 bg-[#588157] group-hover:bg-[#3a5a40] rounded transition-colors"></div>';
-                        }
-                      }}
-                    />
+            <div className="flex flex-nowrap items-center justify-center gap-4 md:gap-8 overflow-x-auto w-full scrollbar-hide pb-2">
+              {loading ? (
+                Array(8).fill(0).map((_, i) => (
+                  <div key={i} className="flex flex-col items-center gap-3 min-w-[80px] flex-shrink-0">
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-gray-200 rounded-full animate-pulse"></div>
+                    <div className="h-4 w-16 bg-gray-200 rounded animate-pulse"></div>
                   </div>
-                  <span className="text-xs md:text-sm text-[#374151] font-medium text-center tracking-wide group-hover:text-[#3a5a40] whitespace-nowrap">{category.name}</span>
-                </button>
-              ))}
+                ))
+              ) : categories.length > 0 ? (
+                categories.map((category) => (
+                  <button
+                    key={category.name}
+                    onClick={() => {
+                      navigateTo(`/products?category=${encodeURIComponent(category.name)}`);
+                    }}
+                    className="flex flex-col items-center gap-3 min-w-[80px] md:min-w-[96px] flex-shrink-0 text-[#344e41] hover:text-[#588157] transition-all group"
+                  >
+                    <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md border border-gray-100">
+                      <img 
+                        src={getOptimizedImageUrl(category.image, 400, 400)} 
+                        alt={category.name}
+                        loading="lazy"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        onError={(e) => {
+                          const target = e.target as HTMLImageElement;
+                          target.style.display = 'none';
+                          if (target.parentElement) {
+                            target.parentElement.innerHTML = '<div class="w-10 h-10 bg-[#588157] group-hover:bg-[#3a5a40] rounded transition-colors"></div>';
+                          }
+                        }}
+                      />
+                    </div>
+                    <span className="text-xs md:text-sm text-[#374151] font-medium text-center tracking-wide group-hover:text-[#3a5a40] whitespace-nowrap overflow-hidden text-ellipsis w-full px-1">{category.name}</span>
+                  </button>
+                ))
+              ) : (
+                <div className="w-full text-center text-gray-500 py-4">No categories found</div>
+              )}
             </div>
           </div>
         </div>

@@ -4,6 +4,7 @@
 export interface ShopifyProduct {
   id: string;
   title: string;
+  productType: string;
   handle: string;
   description: string;
   priceRange: {

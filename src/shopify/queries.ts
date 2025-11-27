@@ -25,6 +25,7 @@ export const PRODUCTS_QUERY = `
         node {
           id
           title
+          productType
           handle
           description
           vendor
@@ -106,6 +107,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
     productByHandle(handle: $handle) {
       id
       title
+      productType
       handle
       description
       vendor

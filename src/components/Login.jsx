@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
+import { useRouter } from '../utils/Router';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
 const Login = ({ onClose }) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
+
+  const { navigateTo } = useRouter();
 
   return (
     <div className="fixed inset-0 bg-black/20 flex items-center justify-center z-50 p-4">
@@ -95,7 +98,7 @@ const Login = ({ onClose }) => {
 
             <div className="text-center pt-4 mt-4 border-t border-gray-100">
               <p className="text-xs text-gray-400 mb-3">
-                By continuing, you agree to our <a href="#" className="text-[#5d7c5f]">Terms of Service</a> and <a href="#" className="text-[#5d7c5f]">Privacy Policy</a>
+                By continuing, you agree to our <button type="button" onClick={() => navigateTo('/terms')} className="text-[#5d7c5f]">Terms of Service</button> and <button type="button" onClick={() => navigateTo('/privacy')} className="text-[#5d7c5f]">Privacy Policy</button>
               </p>
               <button type="button" onClick={onClose} className="text-sm text-[#5d7c5f] flex items-center gap-1 mx-auto">
                 <ArrowLeft className="w-4 h-4" />

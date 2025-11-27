@@ -19,6 +19,7 @@ interface ProductGridProps {
   isLoading?: boolean;
   showFilters?: boolean;
   showSearch?: boolean;
+  initialCategory?: string | null;
 }
 
 type SortOption = 'featured' | 'best-selling' | 'title-asc' | 'title-desc' | 'price-asc' | 'price-desc' | 'newest' | 'oldest';
@@ -36,13 +37,14 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   isLoading = false,
   showFilters = true,
   showSearch = true,
+  initialCategory = null,
 }) => {
   const [sortBy, setSortBy] = useState<SortOption>('featured');
   const [searchQuery, setSearchQuery] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
   const [filters, setFilters] = useState<FilterState>({
-    tags: [],
+    tags: initialCategory ? [initialCategory] : [],
     priceRange: [0, 10000],
     availability: 'all',
   });
@@ -58,6 +60,7 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
   const availableCategories = useMemo(() => {
     const categories = new Set<string>();
     products.forEach((p) => {
+      if (p.productType) categories.add(p.productType);
       p.tags.forEach((tag) => categories.add(tag));
     });
     return Array.from(categories).sort();
@@ -88,9 +91,11 @@ export const ProductGrid: React.FC<ProductGridProps> = ({
     // Category filter
     if (filters.tags.length > 0) {
       result = result.filter((product) =>
-        filters.tags.some((tag) =>
-          product.tags.some((t) => t.toLowerCase() === tag.toLowerCase())
-        )
+        filters.tags.some((filterTag) => {
+          const matchTag = product.tags.some((t) => t.toLowerCase() === filterTag.toLowerCase());
+          const matchType = product.productType && product.productType.toLowerCase() === filterTag.toLowerCase();
+          return matchTag || matchType;
+        })
       );
     }
 

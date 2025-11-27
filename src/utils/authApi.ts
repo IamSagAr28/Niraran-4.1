@@ -16,6 +16,16 @@ export const checkSession = async () => {
   }
 };
 
+export const loginUser = async (email, password) => {
+  const response = await api.post('/auth/login', { email, password });
+  return response.data;
+};
+
+export const signupUser = async (email, password, firstName, lastName) => {
+  const response = await api.post('/auth/signup', { email, password, firstName, lastName });
+  return response.data;
+};
+
 export const logoutUser = async () => {
   await api.get('/auth/logout');
 };

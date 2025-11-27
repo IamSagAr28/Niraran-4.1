@@ -260,7 +260,7 @@ const ShopifyLoginPage = () => {
 
             <div className="footer">
               <p>
-                By continuing, you agree to our <a href="#">Terms of Service</a> and <a href="#">Privacy Policy</a>
+                By continuing, you agree to our <button type="button" onClick={() => navigateTo('/terms')} className="underline">Terms of Service</button> and <button type="button" onClick={() => navigateTo('/privacy')} className="underline">Privacy Policy</button>
               </p>
               <button 
                 type="button" 

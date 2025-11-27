@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useRouter } from '../utils/Router';
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export function HeroSlideshow() {
@@ -51,6 +52,46 @@ export function HeroSlideshow() {
 
   const prevSlide = () => {
     setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  };
+  const { navigateTo, currentPath } = useRouter();
+
+  const navigateToSection = (sectionId: string) => {
+    if (currentPath !== '/') {
+      navigateTo('/');
+      setTimeout(() => {
+        const el = document.getElementById(sectionId);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }, 300);
+    } else {
+      const el = document.getElementById(sectionId);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
+  const handlePrimaryCTA = (slideIndex: number) => {
+    const title = slides[slideIndex]?.primaryCTA?.toLowerCase() || '';
+    if (title.includes('shop') || title.includes('explore') || title.includes('get started')) {
+      navigateTo('/products');
+      return;
+    }
+    navigateTo('/products');
+  };
+
+  const handleSecondaryCTA = (slideIndex: number) => {
+    const cta = slides[slideIndex]?.secondaryCTA?.toLowerCase() || '';
+    if (cta.includes('learn') || cta.includes('mission') || cta.includes('about')) {
+      navigateToSection('about');
+      return;
+    }
+    if (cta.includes('our story') || cta.includes('our-story')) {
+      navigateToSection('our-story');
+      return;
+    }
+    if (cta.includes('join workshop') || cta.includes('workshop')) {
+      navigateToSection('workshops');
+      return;
+    }
+    navigateTo('/');
   };
 
   return (
@@ -108,10 +149,10 @@ export function HeroSlideshow() {
                   className="flex gap-4 animate-fade-in"
                   style={{ animationDelay: '0.3s' }}
                 >
-                  <button className="px-8 py-3 bg-[#588157] text-white hover:bg-[#a3b18a] hover:text-[#344e41] rounded-lg transition-all duration-300 hover:scale-105 shadow-lg">
+                  <button onClick={() => handlePrimaryCTA(currentSlide)} className="px-8 py-3 bg-[#588157] text-white hover:bg-[#a3b18a] hover:text-[#344e41] rounded-lg transition-all duration-300 hover:scale-105 shadow-lg">
                     {slides[currentSlide].primaryCTA}
                   </button>
-                  <button className="px-8 py-3 border-2 border-white text-white hover:bg-white hover:text-[#3a5a40] rounded-lg transition-all duration-300">
+                  <button onClick={() => handleSecondaryCTA(currentSlide)} className="px-8 py-3 border-2 border-white text-white hover:bg-white hover:text-[#3a5a40] rounded-lg transition-all duration-300">
                     {slides[currentSlide].secondaryCTA}
                   </button>
                 </div>

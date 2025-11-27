@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRouter } from '../utils/Router';
 import { Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
 
 const Login = ({ onClose }) => {
@@ -20,6 +21,8 @@ const Login = ({ onClose }) => {
       console.log(isSignUp ? 'Signup submitted:' : 'Login submitted:', formData);
     }, 1000);
   };
+
+  const { navigateTo } = useRouter();
 
   return (
     <div className="fixed inset-0 bg-[#a3b18a]/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -180,9 +183,9 @@ const Login = ({ onClose }) => {
             <div className="pt-4 text-center border-t border-[#dad7cd]/60">
               <p className="text-xs text-gray-400 leading-relaxed mb-3">
                 By continuing, you agree to our{' '}
-                <a href="#" className="text-[#588157] hover:underline">Terms of Service</a>
+                <button type="button" onClick={() => navigateTo('/terms')} className="text-[#588157] hover:underline">Terms of Service</button>
                 {' and '}
-                <a href="#" className="text-[#588157] hover:underline">Privacy Policy</a>
+                <button type="button" onClick={() => navigateTo('/privacy')} className="text-[#588157] hover:underline">Privacy Policy</button>
               </p>
               <button
                 type="button"

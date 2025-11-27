@@ -4,6 +4,7 @@ import { HeroSlideshow } from "./HeroSlideshow.jsx";
 import { FeatureIcons } from "./FeatureIcons";
 import { CategoryShowcase } from "./CategoryShowcase";
 import { InfoBlocks } from "./InfoBlocks";
+import { WorkshopSection } from "./WorkshopSection.tsx";
 import { MembershipPlans } from "./MembershipPlans";
 import { SplitContentSection } from "./SplitContentSection";
 import { FeaturedBanner } from "./FeaturedBanner";
@@ -31,6 +32,11 @@ const HomePage = () => {
       {/* Info Blocks */}
       <section id="about">
         <InfoBlocks />
+      </section>
+
+      {/* Workshop Section */}
+      <section id="workshops">
+        <WorkshopSection />
       </section>
 
       {/* Membership Plans */}

@@ -18,6 +18,15 @@ export const ShopifyProductsPage: React.FC = () => {
   const { navigateTo } = useRouter();
   const [addingVariantId, setAddingVariantId] = useState<string | null>(null);
   const [selectedHandle, setSelectedHandle] = useState<string | null>(null);
+  const [initialCategory, setInitialCategory] = useState<string | null>(null);
+
+  React.useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const category = params.get('category');
+    if (category) {
+      setInitialCategory(decodeURIComponent(category));
+    }
+  }, []);
 
   const handleAddToCart = async (variantId: string) => {
     try {
@@ -110,6 +119,7 @@ export const ShopifyProductsPage: React.FC = () => {
             isLoading={addingVariantId !== null}
             showFilters={true}
             showSearch={true}
+            initialCategory={initialCategory}
           />
         )}
       </div>

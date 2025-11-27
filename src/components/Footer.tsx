@@ -1,4 +1,6 @@
 import { Facebook, Instagram, Twitter, Mail, Phone, MapPin } from "lucide-react";
+import { useRouter } from "../utils/Router";
+import { useState } from 'react';
 
 const scrollToSection = (sectionId: string) => {
   const element = document.getElementById(sectionId);
@@ -11,6 +13,19 @@ const scrollToSection = (sectionId: string) => {
 };
 
 export function Footer() {
+  const { navigateTo } = useRouter();
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+
+  const handleSubscribe = (e?: any) => {
+    e?.preventDefault?.();
+    if (!newsletterEmail) {
+      alert('Please enter your email');
+      return;
+    }
+    // Placeholder - connect to an email service like Mailchimp in production
+    alert(`Thanks! Subscribed ${newsletterEmail} (placeholder)`);
+    setNewsletterEmail('');
+  };
   return (
     <footer className="bg-[#344e41] text-white">
       {/* Main Footer Content */}
@@ -67,11 +82,11 @@ export function Footer() {
               <div className="space-y-4">
                 <h4 className="text-[#a3b18a] mb-4">Shop</h4>
                 <div className="space-y-3">
-                  <button onClick={() => scrollToSection('products')} className="block text-[#dad7cd] hover:text-white transition-colors">All Products</button>
-                  <button onClick={() => scrollToSection('products')} className="block text-[#dad7cd] hover:text-white transition-colors">Wall Hangings</button>
-                  <button onClick={() => scrollToSection('products')} className="block text-[#dad7cd] hover:text-white transition-colors">Clutches & Pouches</button>
-                  <button onClick={() => scrollToSection('products')} className="block text-[#dad7cd] hover:text-white transition-colors">Home Textiles</button>
-                  <button onClick={() => scrollToSection('products')} className="block text-[#dad7cd] hover:text-white transition-colors">Festival Items</button>
+                  <button onClick={() => navigateTo('/products')} className="block text-[#dad7cd] hover:text-white transition-colors">All Products</button>
+                  <button onClick={() => navigateTo(`/products?category=${encodeURIComponent('Wall Hangings')}`)} className="block text-[#dad7cd] hover:text-white transition-colors">Wall Hangings</button>
+                  <button onClick={() => navigateTo(`/products?category=${encodeURIComponent('Clutches & Pouches')}`)} className="block text-[#dad7cd] hover:text-white transition-colors">Clutches & Pouches</button>
+                  <button onClick={() => navigateTo(`/products?category=${encodeURIComponent('Home Textiles')}`)} className="block text-[#dad7cd] hover:text-white transition-colors">Home Textiles</button>
+                  <button onClick={() => navigateTo(`/products?category=${encodeURIComponent('Festival Items')}`)} className="block text-[#dad7cd] hover:text-white transition-colors">Festival Items</button>
                 </div>
               </div>
 
@@ -170,16 +185,18 @@ export function Footer() {
           <div className="max-w-md">
             <h4 className="text-[#a3b18a] mb-4">Stay Updated</h4>
             <p className="text-[#dad7cd] text-sm mb-4">Subscribe to our newsletter for new products and exclusive offers</p>
-            <div className="flex gap-2">
+            <form onSubmit={handleSubscribe} className="flex gap-2">
               <input
                 type="email"
                 placeholder="Your email address"
+                value={newsletterEmail}
+                onChange={(e) => setNewsletterEmail(e.target.value)}
                 className="flex-1 px-4 py-2 bg-[#3a5a40] border border-[#588157] rounded focus:outline-none focus:border-[#a3b18a] text-white placeholder:text-[#dad7cd]/60"
               />
-              <button className="px-6 py-2 bg-[#588157] hover:bg-[#a3b18a] rounded transition-colors">
+              <button type="submit" className="px-6 py-2 bg-[#588157] hover:bg-[#a3b18a] rounded transition-colors">
                 Subscribe
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -190,9 +207,9 @@ export function Footer() {
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-[#dad7cd]">
             <p>© 2025 Nivaran Upcyclers. All rights reserved.</p>
             <div className="flex gap-6">
-              <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
-              <a href="#" className="hover:text-white transition-colors">Shipping Policy</a>
+              <button onClick={() => navigateTo('/privacy')} className="hover:text-white transition-colors">Privacy Policy</button>
+              <button onClick={() => navigateTo('/terms')} className="hover:text-white transition-colors">Terms of Service</button>
+              <button onClick={() => navigateTo('/shipping')} className="hover:text-white transition-colors">Shipping Policy</button>
             </div>
           </div>
         </div>
