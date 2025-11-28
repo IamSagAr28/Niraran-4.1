@@ -43,3 +43,5 @@ const MissingEnvVars = () => {
     </CartProvider>
   );
 }
+
+export default MissingEnvVars;
