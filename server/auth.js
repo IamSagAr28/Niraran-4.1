@@ -164,6 +164,12 @@ router.post('/login', (req, res) => {
  * Initiates the Google OAuth flow.
  */
 router.get('/google', (req, res) => {
+  // Ensure we have a redirect URI set
+  if (!GOOGLE_REDIRECT_URI) {
+    console.error('❌ GOOGLE_REDIRECT_URI is missing. Cannot start OAuth flow.');
+    return res.status(500).send('Server misconfiguration: GOOGLE_REDIRECT_URI is missing');
+  }
+
   const authorizeUrl = client.generateAuthUrl({
     access_type: 'offline',
     scope: [
@@ -171,9 +177,26 @@ router.get('/google', (req, res) => {
       'https://www.googleapis.com/auth/userinfo.email',
     ],
     prompt: 'consent',
+    // Force an explicit redirect_uri param to be used in the request
+    redirect_uri: GOOGLE_REDIRECT_URI,
   });
+  const DEBUG = process.env.DEBUG === 'true' || process.env.NODE_ENV !== 'production';
+  if (DEBUG) {
+    console.log('[DEBUG] Google authorizeUrl:', authorizeUrl);
+  }
   res.redirect(authorizeUrl);
 });
+
+// Dev-only debug route: show non-secret config values for quick verification
+if (process.env.NODE_ENV !== 'production' || process.env.DEBUG === 'true') {
+  router.get('/debug', (req, res) => {
+    return res.json({
+      GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID || null,
+      GOOGLE_REDIRECT_URI: process.env.GOOGLE_REDIRECT_URI || null,
+      CLIENT_URL: process.env.CLIENT_URL || 'http://localhost:5173',
+    });
+  });
+}
 
 /**
  * GET /auth/google/callback

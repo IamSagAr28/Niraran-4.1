@@ -1,5 +1,9 @@
 const cookieSession = require('cookie-session');
 
+if (process.env.NODE_ENV === 'production' && !process.env.SESSION_KEY) {
+  throw new Error('SESSION_KEY must be set in production for secure sessions');
+}
+
 const sessionMiddleware = cookieSession({
   name: 'nivaran_session',
   keys: [process.env.SESSION_KEY || 'secret_key_change_me'],

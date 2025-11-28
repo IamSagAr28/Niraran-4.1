@@ -13,22 +13,33 @@ const verifyShopifyWebhook = (req, res, next) => {
   const topic = req.get('X-Shopify-Topic');
   const shop = req.get('X-Shopify-Shop-Domain');
 
+  // req.body for webhook routes is a Buffer thanks to express.raw in index.js
+  const rawBody = req.body;
+
   if (!hmac || !SHOPIFY_SECRET) {
     console.warn('⚠️ Missing signature or secret for webhook');
-    // For development, you might want to bypass this if secret isn't set
-    // return res.status(401).send('Unauthorized');
+    return res.status(400).send('Missing signature or webhook secret');
   }
 
   try {
     const generatedHash = crypto
       .createHmac('sha256', SHOPIFY_SECRET)
-      .update(JSON.stringify(req.body), 'utf8')
+      .update(rawBody)
       .digest('base64');
 
     if (generatedHash !== hmac) {
       console.error(`❌ Signature mismatch for topic: ${topic}`);
-      // return res.status(401).send('Unauthorized'); // Uncomment in production
+      return res.status(400).send('Invalid webhook signature');
     }
+
+    // Signature verified — parse JSON now and attach to req.body so handlers can use req.body as object
+    try {
+      req.body = JSON.parse(rawBody.toString('utf8'));
+    } catch (parseErr) {
+      console.error('Webhook JSON parse error:', parseErr);
+      return res.status(400).send('Invalid JSON');
+    }
+
     next();
   } catch (e) {
     console.error('Webhook verification error:', e);

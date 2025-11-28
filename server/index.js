@@ -18,6 +18,10 @@ app.use(cors({
 // Webhooks need to be mounted before body parser if we want raw body, 
 // but our webhook handler currently uses req.body. 
 // For better signature verification, we should use raw body, but let's stick to the current plan for simplicity unless requested.
+// Use raw body parser for webhook routes so we can verify HMAC signatures using raw bytes
+app.use('/api/webhooks', express.raw({ type: 'application/json' }));
+
+// Use JSON parser for all other API routes
 app.use(express.json());
 
 // Session Middleware

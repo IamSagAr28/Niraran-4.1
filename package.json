@@ -66,6 +66,7 @@
       "scripts": {
             "dev": "vite --force",
             "dev-safe": "vite --host 0.0.0.0 --port 3000",
-            "build": "vite build"
+            "build": "vite build",
+            "test:oauth-debug": "node server/scripts/test-oauth-debug.js"
       }
 }
