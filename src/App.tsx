@@ -18,7 +18,7 @@ import { AuthProvider } from './contexts/AuthContext';
 import { ShopCartProvider } from './contexts/ShopCartContext';
 
 // Check for required environment variables
-const MissingEnvVars = () => {
+const App = () => {
 // ...existing code...
   return (
     <CartProvider>
@@ -44,4 +44,4 @@ const MissingEnvVars = () => {
   );
 }
 
-export default MissingEnvVars;
+export default App;
