@@ -47,15 +47,17 @@ function findOrCreateLocalUser(email, googleId, shopifyId, firstName, lastName) 
         function (err) {
           if (err) return reject(err);
           // Handle lastID for both SQLite (this.lastID) and Postgres (handled in wrapper)
-          const newId = this.lastID || 0; 
+          const newId = this.lastID || 0;
           // Note: If Postgres wrapper doesn't return ID, we might need to fetch user by email again
           if (newId === 0) {
-             db.get('SELECT * FROM users WHERE email = ?', [email], (err, newUser) => {
-                if (err) return reject(err);
-                resolve(newUser);
-             });
+            db.get('SELECT * FROM users WHERE email = ?', [email], (err, newUser) => {
+              if (err) return reject(err);
+              console.log(`✅ New Google User Created: ${email} (ID: ${newUser.id})`);
+              resolve(newUser);
+            });
           } else {
-             resolve({ id: newId, email, google_id: googleId, shopify_customer_id: shopifyId, first_name: firstName, last_name: lastName });
+            console.log(`✅ New Google User Created: ${email} (ID: ${newId})`);
+            resolve({ id: newId, email, google_id: googleId, shopify_customer_id: shopifyId, first_name: firstName, last_name: lastName });
           }
         }
       );
@@ -97,16 +99,17 @@ router.post('/signup', async (req, res) => {
         [email, hashedPassword, firstName, lastName, shopifyCustomer?.id],
         function (err) {
           if (err) return res.status(500).json({ error: 'Failed to create user' });
-          
+
           // Handle ID retrieval for both DB types
           const finalizeUser = (id) => {
-             const user = {
+            const user = {
               id: id,
               email,
               firstName,
               lastName,
               shopifyCustomerId: shopifyCustomer?.id
             };
+            console.log(`✅ New User Registered: ${email} (ID: ${id})`); // Log for visibility
             req.session.user = user;
             res.status(201).json({ message: 'User created', user });
           };
@@ -116,8 +119,8 @@ router.post('/signup', async (req, res) => {
           } else {
             // Fetch user again to get ID (Postgres fallback)
             db.get('SELECT id FROM users WHERE email = ?', [email], (err, newUser) => {
-               if (err || !newUser) return res.status(500).json({ error: 'User creation verification failed' });
-               finalizeUser(newUser.id);
+              if (err || !newUser) return res.status(500).json({ error: 'User creation verification failed' });
+              finalizeUser(newUser.id);
             });
           }
         }
@@ -222,7 +225,7 @@ router.get('/google/callback', async (req, res) => {
       audience: GOOGLE_CLIENT_ID,
     });
     const payload = ticket.getPayload();
-    
+
     // payload contains: email, email_verified, name, picture, given_name, family_name
     if (!payload.email_verified) {
       return res.status(403).send('Email not verified by Google');
@@ -310,7 +313,7 @@ router.put('/profile', (req, res) => {
   db.run(
     'UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?',
     [firstName, lastName, email, phone, userId],
-    function(err) {
+    function (err) {
       if (err) {
         console.error('Profile update error:', err);
         return res.status(500).json({ error: 'Failed to update profile' });

@@ -12,6 +12,9 @@ const requireAdmin = (req, res, next) => {
   next();
 };
 
+// Public debug route
+router.get('/ping', (req, res) => res.send('Admin Pong'));
+
 // GET /admin/users - List all users and their subscription status
 router.get('/users', requireAdmin, (req, res) => {
   const sql = `
@@ -21,7 +24,7 @@ router.get('/users', requireAdmin, (req, res) => {
     LEFT JOIN subscriptions s ON u.id = s.user_id
     ORDER BY u.created_at DESC
   `;
-  
+
   db.all(sql, [], (err, rows) => {
     if (err) return res.status(500).json({ error: err.message });
     res.json(rows);
@@ -31,14 +34,14 @@ router.get('/users', requireAdmin, (req, res) => {
 // POST /admin/cancel-subscription - Force cancel a subscription locally
 router.post('/cancel-subscription', requireAdmin, (req, res) => {
   const { userId } = req.body;
-  
+
   db.run(
     `UPDATE subscriptions SET status = 'canceled', updated_at = CURRENT_TIMESTAMP WHERE user_id = ?`,
     [userId],
-    function(err) {
+    function (err) {
       if (err) return res.status(500).json({ error: err.message });
       if (this.changes === 0) return res.status(404).json({ error: 'Subscription not found' });
-      
+
       // Log action
       console.log(`Admin canceled subscription for user ${userId}`);
       res.json({ message: 'Subscription canceled locally' });
