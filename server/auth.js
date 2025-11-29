@@ -173,6 +173,18 @@ router.get('/google', (req, res) => {
     return res.status(500).send('Server misconfiguration: GOOGLE_REDIRECT_URI is missing');
   }
 
+  // Store the return URL (referer) in session so we redirect back to the correct frontend
+  if (req.headers.referer) {
+    try {
+      const url = new URL(req.headers.referer);
+      req.session.returnTo = url.origin;
+    } catch (e) {
+      req.session.returnTo = req.headers.referer;
+    }
+  } else {
+    req.session.returnTo = CLIENT_URL;
+  }
+
   const authorizeUrl = client.generateAuthUrl({
     access_type: 'offline',
     scope: [
@@ -254,8 +266,11 @@ router.get('/google/callback', async (req, res) => {
       shopifyCustomerId: localUser.shopify_customer_id
     };
 
-    // 6. Redirect back to frontend
-    res.redirect(`${CLIENT_URL}/?login=success`);
+    // 6. Redirect back to frontend (Dynamic)
+    const returnTo = req.session.returnTo || CLIENT_URL;
+    delete req.session.returnTo;
+
+    res.redirect(`${returnTo}/?login=success`);
 
   } catch (error) {
     console.error('OAuth Error:', error);
