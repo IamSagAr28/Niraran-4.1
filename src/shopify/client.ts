@@ -27,8 +27,8 @@ import {
 import { getFromCache, setInCache, invalidateCache } from './cache';
 
 // Configuration from environment variables
-const SHOPIFY_STORE_URL = import.meta.env.VITE_SHOPIFY_STORE_URL;
-const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN;
+const SHOPIFY_STORE_URL = import.meta.env.VITE_SHOPIFY_STORE_URL || 'nivaranupcyclers.myshopify.com';
+const SHOPIFY_STOREFRONT_TOKEN = import.meta.env.VITE_SHOPIFY_STOREFRONT_TOKEN || '627e86821a39946b5c4ff1b7927a376b';
 const SHOPIFY_API_VERSION = import.meta.env.VITE_SHOPIFY_API_VERSION || '2024-01';
 
 if (!SHOPIFY_STORE_URL || !SHOPIFY_STOREFRONT_TOKEN) {
@@ -166,7 +166,7 @@ export function getOptimizedImageUrl(
   height: number = 300
 ): string {
   if (!url) return '';
-  
+
   // If URL already has parameters, append with &
   const separator = url.includes('?') ? '&' : '?';
   return `${url}${separator}w=${width}&h=${height}&fit=crop`;
