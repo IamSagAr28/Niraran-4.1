@@ -31,7 +31,7 @@ export const WorkshopSection = () => {
           <div className="inline-block px-4 py-2 bg-[#588157]/10 rounded-full mb-3">
             <span className="text-[#588157] font-semibold text-sm uppercase tracking-wider">Learn With Us</span>
           </div>
-          <h2 className="text-3xl font-bold text-[#344e41] mb-3" style={{ fontSize: '26px' }}>
+          <h2 className="text-4xl md:text-5xl font-extrabold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-[#344e41] via-[#588157] to-[#3a5a40] drop-shadow-sm" style={{ lineHeight: '1.2' }}>
             Workshops & Training
           </h2>
           <p className="text-base text-[#3a5a40] max-w-2xl mx-auto" style={{ fontSize: '16px' }}>
