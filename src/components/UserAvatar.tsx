@@ -25,13 +25,14 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({ firstName, lastName, siz
         <div
             className={`
         ${sizeClasses[size]} 
-        bg-gradient-to-br from-[#588157] to-[#3A5A40] 
+        bg-[#3a5a40] 
         text-white font-bold 
         flex items-center justify-center 
-        shadow-sm border border-[#fff]/20
+        shadow-sm border border-[#588157]
         select-none
         ${className}
       `}
+            style={{ backgroundColor: '#3a5a40', color: '#ffffff' }}
             aria-label={`Avatar for ${firstName || 'User'}`}
         >
             {initial}
