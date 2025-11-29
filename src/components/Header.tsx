@@ -20,7 +20,7 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
       products.forEach((product: any) => {
         // Use productType if available, otherwise fallback to first tag, or 'Other'
         const type = product.productType || (product.tags && product.tags.length > 0 ? product.tags[0] : 'Other');
-        
+
         if (type && !categoryMap.has(type)) {
           categoryMap.set(type, {
             name: type,
@@ -70,10 +70,9 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
           <div className="flex gap-6">
             <span>🌱 Transforming Waste into Beautiful Products | Free Shipping on Orders Above ₹999</span>
           </div>
-              <div className="flex gap-4">
-                <button onClick={() => navigateTo('/track-order')} className="hover:text-[#a3b18a] transition-colors">Track Order</button>
-                <button onClick={() => handleNav('our-story')} className="hover:text-[#a3b18a] transition-colors">Join Our Mission</button>
-                <button onClick={() => handleNav('contact')} className="hover:text-[#a3b18a] transition-colors">Contact Us</button>
+          <div className="flex gap-4">
+            <button onClick={() => handleNav('our-story')} className="hover:text-[#a3b18a] transition-colors">Join Our Mission</button>
+            <button onClick={() => handleNav('contact')} className="hover:text-[#a3b18a] transition-colors">Contact Us</button>
           </div>
         </div>
       </div>
@@ -83,9 +82,9 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
         <div className="flex items-center justify-between">
           {/* Logo */}
           <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigateTo('/')}>
-            <img 
-              src="/images/logo.png" 
-              alt="Nivaran Logo" 
+            <img
+              src="/images/logo.png"
+              alt="Nivaran Logo"
               className="w-12 h-12 object-contain"
               onError={(e) => {
                 // Fallback to original design if logo fails to load
@@ -112,46 +111,40 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
 
           {/* Navigation Links */}
           <nav className="hidden md:flex gap-8">
-            <a 
-              href="/" 
+            <a
+              href="/"
               onClick={(e) => { e.preventDefault(); navigateTo('/'); }}
               className="text-[#344e41] hover:text-[#588157] transition-colors font-medium"
             >
               Home
             </a>
-            <a 
-              href="/products" 
+            <a
+              href="/products"
               onClick={(e) => { e.preventDefault(); navigateTo('/products'); }}
               className="text-[#344e41] hover:text-[#588157] transition-colors font-medium"
             >
               Shop
             </a>
-            <button onClick={() => handleNav('about')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">About Us</button>
-            <button onClick={() => handleNav('our-story')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Our Story</button>
-            <button onClick={() => handleNav('workshops')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Workshops</button>
-            <button onClick={() => handleNav('contact')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Contact</button>
+            <a href="#about" onClick={() => handleNav('about')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">About Us</a>
+            <a href="#our-story" onClick={() => handleNav('our-story')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Our Story</a>
+            <a href="#workshops" onClick={() => handleNav('workshops')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Workshops</a>
+            <a href="#contact" onClick={() => handleNav('contact')} className="text-[#344e41] hover:text-[#588157] transition-colors font-medium">Contact</a>
           </nav>
-
           {/* Action Icons */}
           <div className="flex gap-4 items-center">
             <button className="text-[#344e41] hover:text-[#588157] transition-colors" onClick={() => navigateTo('/products')} title="Search Products">
               <Search className="w-5 h-5" />
             </button>
             {isAuthenticated ? (
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-medium text-[#344e41] hidden md:block">
-                  Hi, {user?.firstName || 'User'}
-                </span>
-                <button 
-                  onClick={logout}
-                  className="text-[#344e41] hover:text-[#588157] transition-colors"
-                  title="Logout"
-                >
-                  <LogOut className="w-5 h-5" />
-                </button>
-              </div>
+              <button
+                onClick={() => navigateTo('/dashboard')}
+                className="text-[#344e41] hover:text-[#588157] transition-colors"
+                title="Dashboard"
+              >
+                <User className="w-5 h-5" />
+              </button>
             ) : (
-              <a 
+              <a
                 href="/login"
                 onClick={(e) => { e.preventDefault(); navigateTo('/login'); }}
                 className="text-[#344e41] hover:text-[#588157] transition-colors"
@@ -171,7 +164,7 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
                 </span>
               )}
             </a>
-            <button 
+            <button
               className="md:hidden text-[#344e41] hover:text-[#588157] transition-colors"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             >
@@ -184,20 +177,20 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
         {mobileMenuOpen && (
           <div className="md:hidden bg-white border-t border-[#a3b18a]/30 py-4">
             <nav className="flex flex-col gap-4 px-4">
-              <button 
-                onClick={() => { setMobileMenuOpen(false); navigateTo('/'); }} 
+              <button
+                onClick={() => { setMobileMenuOpen(false); navigateTo('/'); }}
                 className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2"
               >
                 Home
               </button>
-              <button 
-                onClick={() => { setMobileMenuOpen(false); navigateTo('/products'); }} 
+              <button
+                onClick={() => { setMobileMenuOpen(false); navigateTo('/products'); }}
                 className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2"
               >
                 Shop
               </button>
-              <button 
-                onClick={() => { setMobileMenuOpen(false); navigateTo('/cart'); }} 
+              <button
+                onClick={() => { setMobileMenuOpen(false); navigateTo('/cart'); }}
                 className="text-left text-[#344e41] hover:text-[#588157] transition-colors font-medium py-2"
               >
                 Cart
@@ -214,8 +207,40 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
       {/* Category Icons Strip */}
       {showCategories && (
         <div className="border-t border-[#e5e7eb] bg-[#f9f9f7]">
-          <div className="container mx-auto px-4 py-6">
-            <div className="flex flex-nowrap items-center justify-center gap-4 md:gap-8 overflow-x-auto w-full scrollbar-hide pb-2">
+          <div className="mx-auto px-4 py-6" style={{ maxWidth: '1200px' }}>
+            <div
+              className="category-strip"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: loading || categories.length === 0 ? 'repeat(8, 1fr)' : `repeat(${Math.min(categories.length, 8)}, 1fr)`,
+                gap: '1.5rem',
+                alignItems: 'start',
+                justifyItems: 'center',
+                overflowX: 'auto',
+                scrollSnapType: 'x mandatory',
+                WebkitOverflowScrolling: 'touch',
+                scrollbarWidth: 'none',
+                msOverflowStyle: 'none',
+              }}
+            >
+              <style>{`
+                .category-strip::-webkit-scrollbar {
+                  display: none;
+                }
+                
+                @media (max-width: 899px) {
+                  .category-strip {
+                    grid-template-columns: repeat(auto-fit, minmax(80px, 80px)) !important;
+                    justify-content: start !important;
+                  }
+                }
+                
+                @media (min-width: 900px) {
+                  .category-strip {
+                    overflow-x: visible !important;
+                  }
+                }
+              `}</style>
               {loading ? (
                 Array(8).fill(0).map((_, i) => (
                   <div key={i} className="flex flex-col items-center gap-3 min-w-[80px] flex-shrink-0">
@@ -233,8 +258,8 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
                     className="flex flex-col items-center gap-3 min-w-[80px] md:min-w-[96px] flex-shrink-0 text-[#344e41] hover:text-[#588157] transition-all group"
                   >
                     <div className="w-16 h-16 md:w-20 md:h-20 bg-white rounded-full overflow-hidden flex items-center justify-center transition-all duration-300 shadow-sm group-hover:shadow-md border border-gray-100">
-                      <img 
-                        src={getOptimizedImageUrl(category.image, 400, 400)} 
+                      <img
+                        src={getOptimizedImageUrl(category.image, 400, 400)}
                         alt={category.name}
                         loading="lazy"
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"

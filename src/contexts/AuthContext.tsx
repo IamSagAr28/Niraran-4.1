@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { checkSession, loginUser, signupUser, logoutUser, googleLoginUrl } from '../utils/authApi';
+import { checkSession, loginUser, signupUser, logoutUser, updateProfile as updateProfileApi, googleLoginUrl } from '../utils/authApi';
 
 interface User {
   id: string;
@@ -24,6 +24,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   signup: (email: string, password: string, firstName?: string, lastName?: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (profileData: Partial<User>) => Promise<void>;
   googleLoginUrl: string;
 }
 
@@ -95,6 +96,16 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   };
 
+  const updateProfile = async (profileData: Partial<User>) => {
+    try {
+      const data = await updateProfileApi(profileData);
+      setUser(data.user);
+    } catch (error) {
+      console.error('Profile update failed:', error);
+      throw error;
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -105,6 +116,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       login,
       signup,
       logout,
+      updateProfile,
       googleLoginUrl
     }}>
       {children}

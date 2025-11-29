@@ -1,4 +1,4 @@
-declare module './Router.jsx' {
+declare module './Router' {
   export interface RouteProps {
     path: string;
     component: React.ComponentType<any>;
@@ -8,9 +8,9 @@ declare module './Router.jsx' {
     children: React.ReactNode;
     fallback?: React.ReactNode;
   }>;
-  
+
   export const Route: React.FC<RouteProps>;
-  
+
   export const useRouter: () => {
     currentPath: string;
     navigateTo: (path: string) => void;

@@ -30,4 +30,9 @@ export const logoutUser = async () => {
   await api.get('/auth/logout');
 };
 
+export const updateProfile = async (profileData) => {
+  const response = await api.put('/api/profile', profileData);
+  return response.data;
+};
+
 export const googleLoginUrl = `${API_URL}/auth/google`;

@@ -1,487 +1,467 @@
-# 🌐 DEPLOYMENT GUIDE - VERCEL & NETLIFY
+# Complete Deployment Guide - Nivaran 4.1
 
-## Table of Contents
-1. [Pre-Deployment Checklist](#pre-deployment-checklist)
-2. [Vercel Deployment](#vercel-deployment)
-3. [Netlify Deployment](#netlify-deployment)
-4. [Custom Domain Setup](#custom-domain-setup)
-5. [Post-Deployment Verification](#post-deployment-verification)
-6. [Troubleshooting](#troubleshooting)
+## Step 1: Prepare Local Repository
+
+### 1.1 Initialize Git (if not already done)
+```bash
+cd c:\Users\sagar\OneDrive\Desktop\newN\nivaran3.1
+git init
+```
+
+### 1.2 Add Remote Repository
+```bash
+git remote add origin https://github.com/IamSagAr28/Niraran-4.1.git
+```
+
+### 1.3 Create .gitignore
+Create a `.gitignore` file in the root directory with:
+```
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Testing
+coverage/
+
+# Production
+build/
+dist/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Misc
+.cache/
+.temp/
+```
+
+### 1.4 Commit All Changes
+```bash
+git add .
+git commit -m "feat: complete Nivaran 4.1 with all UI improvements and features"
+```
+
+### 1.5 Push to GitHub
+```bash
+git branch -M main
+git push -u origin main
+```
 
 ---
 
-## Pre-Deployment Checklist
+## Step 2: Set Up Environment Variables
 
-Before deploying, ensure:
+### 2.1 Create `.env` file in root directory
+```env
+# Shopify Configuration
+VITE_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your_storefront_access_token
 
-- ✅ **Environment variables are set locally:**
-  ```
-  VITE_SHOPIFY_STORE_URL=your-store.myshopify.com
-  VITE_SHOPIFY_STOREFRONT_TOKEN=shpat_xxxxx
-  VITE_SHOPIFY_API_VERSION=2024-01
-  ```
+# Google OAuth
+VITE_GOOGLE_CLIENT_ID=your_google_client_id.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-- ✅ **Build succeeds locally:**
-  ```bash
-  npm run build
-  ```
+# Server Configuration
+PORT=5000
+NODE_ENV=production
 
-- ✅ **All tests pass:**
-  - Products load correctly
-  - Cart functions work
-  - Checkout redirects to Shopify
+# Session Secret
+SESSION_SECRET=your_super_secret_session_key_change_this
 
-- ✅ **No API keys exposed in code**
-  - All sensitive data uses environment variables
-  - Only Storefront tokens used (never Admin API keys)
+# Database (if using external DB)
+# DATABASE_URL=your_database_url
 
-- ✅ **Git repository is up to date:**
-  ```bash
-  git status
-  git add .
-  git commit -m "Deploy Shopify integration"
-  git push origin master
-  ```
+# Frontend URL (for CORS)
+FRONTEND_URL=http://localhost:3000
+```
+
+### 2.2 Create `.env.example` (for documentation)
+```env
+# Shopify Configuration
+VITE_SHOPIFY_STORE_DOMAIN=
+VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=
+
+# Google OAuth
+VITE_GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+# Server Configuration
+PORT=5000
+NODE_ENV=production
+
+# Session Secret
+SESSION_SECRET=
+
+# Frontend URL
+FRONTEND_URL=http://localhost:3000
+```
 
 ---
 
-## VERCEL DEPLOYMENT (Recommended)
+## Step 3: Update Configuration Files
 
-### Step 1: Create Vercel Account
+### 3.1 Update `package.json` (root)
+Add deployment scripts:
+```json
+{
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "server": "cd server && npm start",
+    "server:dev": "cd server && npm run dev",
+    "start:all": "concurrently \"npm run dev\" \"npm run server:dev\"",
+    "deploy": "npm run build && npm run server"
+  }
+}
+```
 
-1. Go to https://vercel.com/
-2. Click **"Sign Up"**
-3. Choose **"Continue with GitHub"** (or your Git provider)
-4. Authorize Vercel
-5. Create a new account/team
+### 3.2 Update `server/package.json`
+Ensure these scripts exist:
+```json
+{
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  }
+}
+```
 
-### Step 2: Import Your Project
+---
 
-**Option A: Via Git (Recommended)**
+## Step 4: Database Setup
 
-1. Push your code to GitHub (if not already done)
-2. In Vercel dashboard, click **"New Project"**
-3. Select **"Import Git Repository"**
-4. Search for your repository
-5. Click **"Import"**
+### 4.1 Current Setup (SQLite)
+The app uses SQLite with `better-sqlite3`. Database file: `server/database.db`
 
-**Option B: Via CLI**
+**For deployment, you have two options:**
 
+#### Option A: Keep SQLite (Simple)
+- Database file will be created automatically
+- Good for small to medium traffic
+- File: `server/database.db`
+
+#### Option B: Migrate to PostgreSQL (Recommended for production)
+1. Install PostgreSQL adapter:
+```bash
+cd server
+npm install pg
+```
+
+2. Update database connection in `server/db.js`
+3. Set `DATABASE_URL` in `.env`
+
+---
+
+## Step 5: Google OAuth Setup
+
+### 5.1 Google Cloud Console
+1. Go to: https://console.cloud.google.com/
+2. Create new project or select existing
+3. Enable Google+ API
+4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client ID"
+5. Application type: "Web application"
+6. Authorized JavaScript origins:
+   - `http://localhost:3000`
+   - `http://localhost:5000`
+   - `https://your-production-domain.com` (add when deployed)
+7. Authorized redirect URIs:
+   - `http://localhost:5000/api/auth/google/callback`
+   - `https://your-production-domain.com/api/auth/google/callback`
+
+### 5.2 Copy Credentials
+- Copy **Client ID** → Add to `.env` as `VITE_GOOGLE_CLIENT_ID`
+- Copy **Client Secret** → Add to `.env` as `GOOGLE_CLIENT_SECRET`
+
+---
+
+## Step 6: Shopify Configuration
+
+### 6.1 Get Shopify Credentials
+1. Go to Shopify Admin: `your-store.myshopify.com/admin`
+2. Apps → Develop apps → Create app
+3. Configure Storefront API scopes:
+   - `unauthenticated_read_product_listings`
+   - `unauthenticated_read_product_inventory`
+   - `unauthenticated_read_collections`
+4. Install app
+5. Copy **Storefront Access Token**
+
+### 6.2 Update .env
+```env
+VITE_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your_token_here
+```
+
+---
+
+## Step 7: Deployment Options
+
+### Option A: Deploy to Vercel (Frontend) + Render (Backend)
+
+#### Frontend (Vercel)
 ```bash
 # Install Vercel CLI
-npm install -g vercel
-
-# Login to Vercel
-vercel login
+npm i -g vercel
 
 # Deploy
-vercel --prod
+vercel
+
+# Add environment variables in Vercel dashboard
 ```
 
-### Step 3: Configure Environment Variables
-
-1. In Vercel dashboard, go to **Settings → Environment Variables**
-2. Click **"Add"** for each variable:
-
-   **Variable 1:**
-   - Name: `VITE_SHOPIFY_STORE_URL`
-   - Value: `your-store.myshopify.com`
-   - Environments: ✅ Production, Preview, Development
-
-   **Variable 2:**
-   - Name: `VITE_SHOPIFY_STOREFRONT_TOKEN`
-   - Value: `shpat_xxxxxxxxxxxxxxxxxxxx`
-   - Environments: ✅ Production, Preview, Development
-
-   **Variable 3:**
-   - Name: `VITE_SHOPIFY_API_VERSION`
-   - Value: `2024-01`
-   - Environments: ✅ Production, Preview, Development
-
-3. Click **"Save"**
-
-### Step 4: Configure Build Settings
-
-1. Go to **Settings → Build & Development Settings**
-2. Verify build command: `npm run build`
-3. Verify output directory: `dist`
-4. Install command should be: `npm install`
-5. Framework: Auto-detect (should be Vite)
-
-### Step 5: Deploy
-
-**Manual Deployment:**
-
-```bash
-# Push to main branch to trigger auto-deploy
-git push origin master
+**Vercel Configuration (`vercel.json`):**
+```json
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "env": {
+    "VITE_SHOPIFY_STORE_DOMAIN": "@shopify-domain",
+    "VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN": "@shopify-token",
+    "VITE_GOOGLE_CLIENT_ID": "@google-client-id"
+  }
+}
 ```
 
-**Or redeploy from dashboard:**
-
-1. Click **"Deployments"** tab
-2. Find your deployment
-3. Click **"Redeploy"** button
-
-### Step 6: Get Your URL
-
-Your project will be deployed at:
-```
-https://your-project-name.vercel.app
-```
+#### Backend (Render)
+1. Go to https://render.com
+2. New → Web Service
+3. Connect GitHub repository
+4. Root directory: `server`
+5. Build command: `npm install`
+6. Start command: `npm start`
+7. Add environment variables in Render dashboard
 
 ---
 
-## NETLIFY DEPLOYMENT
-
-### Step 1: Create Netlify Account
-
-1. Go to https://netlify.app/
-2. Click **"Sign up"**
-3. Choose **"Sign up with GitHub"**
-4. Authorize Netlify
-5. Create account
-
-### Step 2: Deploy Your Site
-
-**Option A: Via Git (Recommended)**
-
-1. In Netlify, click **"New site from Git"**
-2. Click **"GitHub"**
-3. Search and select your repository
-4. Click **"Deploy site"**
-
-**Option B: Via CLI**
+### Option B: Deploy to Railway (Full Stack)
 
 ```bash
-# Install Netlify CLI
-npm install -g netlify-cli
+# Install Railway CLI
+npm i -g @railway/cli
 
 # Login
-netlify login
+railway login
+
+# Initialize
+railway init
 
 # Deploy
-netlify deploy --prod
+railway up
 ```
 
-### Step 3: Configure Environment Variables
-
-1. Go to **Site settings → Build & deploy → Environment**
-2. Click **"Edit variables"**
-3. Add your variables:
-
-   ```
-   VITE_SHOPIFY_STORE_URL=your-store.myshopify.com
-   VITE_SHOPIFY_STOREFRONT_TOKEN=shpat_xxxxxxxxxxxxxxxxxxxx
-   VITE_SHOPIFY_API_VERSION=2024-01
-   ```
-
-4. Click **"Save"**
-
-### Step 4: Configure Build Settings
-
-1. Go to **Site settings → Build & deploy → Continuous deployment**
-2. Build command: `npm run build`
-3. Publish directory: `dist`
-4. Deploy on push: ✅ Enabled
-
-### Step 5: Test Deployment
-
-1. Netlify automatically deploys when you push to your main branch
-2. Check **"Deploys"** tab to see deployment status
-3. Once complete, your site is live at:
-   ```
-   https://your-site-name.netlify.app
-   ```
+**Railway Configuration:**
+- Add all environment variables
+- Set root directory for backend
+- Configure build commands
 
 ---
 
-## CUSTOM DOMAIN SETUP
-
-### Vercel Custom Domain
-
-1. In Vercel dashboard, go to **Domains**
-2. Click **"Add Domain"**
-3. Enter your domain: `www.nivaranupcyclers.com`
-4. Choose connection method:
-
-   **Option A: Update DNS Records (Recommended)**
-   - Add CNAME record to your domain provider:
-     - Name: `www`
-     - Value: `cname.vercel-dns.com`
-   - Add A records for root domain:
-     - `76.76.19.0`
-     - `76.76.19.1`
-
-   **Option B: Change Name Servers**
-   - Use Vercel name servers in your domain provider
-
-5. Verify domain in Vercel dashboard
-
-### Netlify Custom Domain
-
-1. In Netlify, go to **Site settings → Domain management**
-2. Click **"Add custom domain"**
-3. Enter your domain: `www.nivaranupcyclers.com`
-4. Choose connection:
-
-   **Option A: Add DNS Records**
-   - Go to your domain provider
-   - Add CNAME record:
-     - Name: `www`
-     - Value: `your-netlify-url.netlify.app`
-
-   **Option B: Change Name Servers**
-   - Update name servers to Netlify's name servers
-
-5. Verify in Netlify dashboard
-
-### SSL Certificate (Automatic)
-
-Both Vercel and Netlify automatically provide FREE SSL certificates via Let's Encrypt. Your site will be `https://` automatically.
-
----
-
-## POST-DEPLOYMENT VERIFICATION
-
-### Test 1: Site Loads
+### Option C: Deploy to Heroku (Full Stack)
 
 ```bash
-# Check site is accessible
-curl https://your-site.vercel.app
-```
+# Install Heroku CLI
+# Download from: https://devcenter.heroku.com/articles/heroku-cli
 
-### Test 2: Shopify Integration Works
+# Login
+heroku login
 
-1. Visit your deployed site
-2. Navigate to `/products`
-3. **Should see:**
-   - ✅ Products loading
-   - ✅ Images displaying
-   - ✅ Prices showing correctly
+# Create app
+heroku create nivaran-app
 
-### Test 3: Cart Functionality
+# Add buildpacks
+heroku buildpacks:add heroku/nodejs
 
-1. Add a product to cart
-2. Navigate to `/cart`
-3. **Should see:**
-   - ✅ Cart items displayed
-   - ✅ Quantity controls work
-   - ✅ Total calculated correctly
+# Deploy
+git push heroku main
 
-### Test 4: Checkout
-
-1. Click "Proceed to Checkout"
-2. **Should redirect to Shopify checkout**
-
-### Test 5: Real-Time Updates
-
-1. Add a product in Shopify Admin
-2. Clear browser cache
-3. Refresh your website
-4. **New product should appear within 60 seconds**
-
-### Check Performance
-
-**Vercel Analytics:**
-- Go to **Analytics** tab
-- Monitor Core Web Vitals
-- Check response times
-
-**Netlify Analytics:**
-- Go to **Analytics** tab
-- Monitor bandwidth usage
-- Check deployment logs
-
----
-
-## TROUBLESHOOTING
-
-### Issue: "Environment Variables Not Found"
-
-**Solution:**
-1. Verify variables are added to deployment platform
-2. Restart/redeploy:
-   - **Vercel:** Push code change or click "Redeploy"
-   - **Netlify:** Click "Trigger deploy"
-3. Check values exactly match `.env.local`
-4. Ensure all 3 variables are set (not just some)
-
-### Issue: "404 on Products Page"
-
-**Solution:**
-1. Check routes are configured in your Router
-2. Verify `ShopifyProductsPage.tsx` is imported
-3. Restart dev server locally, rebuild and redeploy
-
-### Issue: "Products Not Loading (White Page)"
-
-**Solution:**
-1. Open DevTools Console (F12)
-2. Check for errors:
-   - CORS error? Check token is valid
-   - API error? Check store URL is correct
-   - Token error? Regenerate in Shopify Admin
-3. Check Network tab → GraphQL requests
-4. Verify environment variables are set on platform
-
-### Issue: "Cart Data Lost on Refresh"
-
-**Solution:**
-1. Check localStorage is working:
-   - Open DevTools → Application → LocalStorage
-   - Should see `shopify_cart_id` entry
-2. Verify cart ID is being saved
-3. Check useShopifyCart hook is initialized
-
-### Issue: "Images Not Loading"
-
-**Solution:**
-1. Check image URLs from Shopify API
-2. Verify Shopify image permissions
-3. Check CORS headers (Shopify handles this automatically)
-4. Try with different image format:
-   ```tsx
-   getOptimizedImageUrl(url, 300, 300)
-   ```
-
-### Issue: "Slow Performance"
-
-**Solution:**
-1. Check cache is working:
-   ```js
-   // In console
-   getCacheStats()
-   ```
-2. Monitor Network tab for large responses
-3. Check if images are optimized (should be < 100KB)
-4. Verify GraphQL queries are efficient
-5. Check Core Web Vitals in platform analytics
-
-### Issue: "Checkout Redirect Fails"
-
-**Solution:**
-1. Verify Shopify checkout URL is correct
-2. Check cart is created successfully
-3. Verify cart ID is saved
-4. Try manual checkout URL format:
-   ```
-   https://your-store.myshopify.com/cart/{checkout-token}
-   ```
-
----
-
-## Monitoring & Maintenance
-
-### Set Up Alerts (Vercel)
-
-1. Go to **Settings → Monitoring**
-2. Enable:
-   - ✅ Failed builds
-   - ✅ Performance issues
-   - ✅ Error logs
-
-### Set Up Alerts (Netlify)
-
-1. Go to **Site settings → Notifications**
-2. Add notification for:
-   - ✅ Deploy failed
-   - ✅ Deploy succeeded
-
-### Monthly Maintenance
-
-- [ ] Check deployment logs for errors
-- [ ] Monitor analytics for performance
-- [ ] Verify Shopify token is still valid
-- [ ] Test product updates from Shopify
-- [ ] Review cache effectiveness
-
-### Quarterly Updates
-
-- [ ] Update dependencies: `npm update`
-- [ ] Check for security vulnerabilities: `npm audit`
-- [ ] Test with new Shopify product types
-- [ ] Review and optimize GraphQL queries
-
----
-
-## Deployment Comparison
-
-| Feature | Vercel | Netlify |
-|---------|--------|---------|
-| **Price** | Free | Free |
-| **Performance** | Excellent | Excellent |
-| **Edge Functions** | ✅ Yes | Limited |
-| **Build Speed** | Fast | Fast |
-| **Analytics** | ✅ Built-in | ✅ Built-in |
-| **Custom Domain** | ✅ Easy | ✅ Easy |
-| **Git Integration** | ✅ GitHub/GitLab/Bitbucket | ✅ GitHub/GitLab/Bitbucket |
-| **Environment Vars** | ✅ Easy | ✅ Easy |
-| **Redirects/Rewrites** | ✅ Yes | ✅ Yes |
-| **Cost (Scale)** | Pay as you go | Pay as you go |
-
-**Recommendation:** Vercel is slightly better for React/Vite projects, but both are excellent choices.
-
----
-
-## Rollback Deployment
-
-### Vercel Rollback
-
-1. Go to **Deployments** tab
-2. Find previous working deployment
-3. Click **"Redeploy"** button
-4. Site reverts to that version
-
-### Netlify Rollback
-
-1. Go to **Deploys** tab
-2. Find previous working deployment
-3. Click **"Publish deploy"**
-4. Site reverts to that version
-
----
-
-## URL Structure Reference
-
-**Vercel:**
-```
-Production: https://your-project.vercel.app
-Custom: https://www.yourdomain.com
-Preview: https://pr-123.your-project.vercel.app
-```
-
-**Netlify:**
-```
-Production: https://your-site-name.netlify.app
-Custom: https://www.yourdomain.com
-Preview: https://pr-123.your-site-name.netlify.app
+# Set environment variables
+heroku config:set VITE_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+heroku config:set VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=your_token
+heroku config:set VITE_GOOGLE_CLIENT_ID=your_client_id
+heroku config:set GOOGLE_CLIENT_SECRET=your_secret
+heroku config:set SESSION_SECRET=your_session_secret
 ```
 
 ---
 
-## Summary
+## Step 8: Post-Deployment Checklist
 
-✅ **To deploy your Shopify integration:**
+### 8.1 Test All Features
+- [ ] Homepage loads correctly
+- [ ] Products display from Shopify
+- [ ] Category filtering works
+- [ ] Search functionality
+- [ ] Cart operations (add, remove, update)
+- [ ] User registration
+- [ ] Email/password login
+- [ ] Google OAuth login
+- [ ] Dashboard access
+- [ ] Profile updates
+- [ ] Logout functionality
+- [ ] Workshops section displays
+- [ ] Footer links work
+- [ ] Mobile responsive
 
-1. Prepare: `npm run build` (test locally)
-2. Push code to GitHub
-3. Create account on Vercel or Netlify
-4. Import your Git repository
-5. Add environment variables
-6. Deploy automatically
-7. Get your live URL
-8. Test all functionality
-9. Set up custom domain (optional)
-10. Monitor performance
+### 8.2 Update Google OAuth
+- Add production domain to authorized origins
+- Add production callback URL
 
-**Time to deploy:** ~10 minutes  
-**Cost:** Free (or pay-as-you-grow)  
-**Downtime:** None (CI/CD automated)
+### 8.3 Update CORS
+In `server/server.js`, update CORS origin:
+```javascript
+app.use(cors({
+  origin: ['http://localhost:3000', 'https://your-production-domain.com'],
+  credentials: true
+}));
+```
+
+### 8.4 Security Checklist
+- [ ] Strong SESSION_SECRET set
+- [ ] HTTPS enabled in production
+- [ ] Environment variables secured
+- [ ] Database backed up
+- [ ] Rate limiting configured
+- [ ] Input validation in place
 
 ---
 
-**Need help?** Check the troubleshooting section above or contact support.
+## Step 9: Quick Deploy Commands
 
-**Last Updated:** November 2024  
-**Version:** 1.0
+### For Local Testing
+```bash
+# Terminal 1 - Backend
+cd server
+npm install
+npm start
+
+# Terminal 2 - Frontend
+npm install
+npm run dev
+```
+
+### For Production Build
+```bash
+# Build frontend
+npm run build
+
+# Test production build
+npm run preview
+
+# Start backend
+cd server
+npm start
+```
+
+---
+
+## Step 10: Troubleshooting
+
+### Common Issues
+
+**1. Google OAuth not working**
+- Check redirect URIs match exactly
+- Verify client ID and secret
+- Check CORS settings
+
+**2. Shopify products not loading**
+- Verify Storefront Access Token
+- Check store domain format
+- Ensure API scopes are correct
+
+**3. Database errors**
+- Check file permissions for SQLite
+- Verify DATABASE_URL for PostgreSQL
+- Run migrations if needed
+
+**4. Session issues**
+- Verify SESSION_SECRET is set
+- Check cookie settings
+- Ensure CORS credentials: true
+
+---
+
+## Environment Variables Summary
+
+**Required for deployment:**
+```env
+VITE_SHOPIFY_STORE_DOMAIN=your-store.myshopify.com
+VITE_SHOPIFY_STOREFRONT_ACCESS_TOKEN=shpat_xxxxx
+VITE_GOOGLE_CLIENT_ID=xxxxx.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=GOCSPX-xxxxx
+SESSION_SECRET=random_secure_string_min_32_chars
+PORT=5000
+NODE_ENV=production
+FRONTEND_URL=https://your-frontend-domain.com
+```
+
+---
+
+## Quick Start Commands
+
+```bash
+# 1. Clone/Navigate to project
+cd c:\Users\sagar\OneDrive\Desktop\newN\nivaran3.1
+
+# 2. Install dependencies
+npm install
+cd server && npm install && cd ..
+
+# 3. Set up environment variables
+# Create .env file with all required variables
+
+# 4. Initialize git and push
+git init
+git add .
+git commit -m "Initial commit - Nivaran 4.1"
+git remote add origin https://github.com/IamSagAr28/Niraran-4.1.git
+git branch -M main
+git push -u origin main
+
+# 5. Deploy (choose one platform)
+# Vercel: vercel
+# Railway: railway up
+# Heroku: git push heroku main
+```
+
+---
+
+## Support & Documentation
+
+- **Shopify Docs:** https://shopify.dev/docs/api/storefront
+- **Google OAuth:** https://developers.google.com/identity/protocols/oauth2
+- **Vercel Docs:** https://vercel.com/docs
+- **Render Docs:** https://render.com/docs
+- **Railway Docs:** https://docs.railway.app
+
+---
+
+**Status:** Ready for deployment! 🚀

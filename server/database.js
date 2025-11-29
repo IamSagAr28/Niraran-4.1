@@ -13,7 +13,7 @@ if (isPostgres) {
     connectionString: process.env.DATABASE_URL,
     ssl: { rejectUnauthorized: false } // Required for most cloud DBs like Vercel Postgres/Neon
   });
-  
+
   initPgDb();
 } else {
   console.log('📂 Connecting to local SQLite...');
@@ -37,6 +37,7 @@ function initPgDb() {
       password_hash TEXT,
       first_name TEXT,
       last_name TEXT,
+      phone TEXT,
       shopify_customer_id TEXT,
       google_id TEXT,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -77,6 +78,7 @@ function initSqliteDb() {
       password_hash TEXT,
       first_name TEXT,
       last_name TEXT,
+      phone TEXT,
       shopify_customer_id TEXT,
       google_id TEXT,
       created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
@@ -97,7 +99,7 @@ function initSqliteDb() {
       updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
       FOREIGN KEY (user_id) REFERENCES users (id)
     )`);
-    
+
     db.run(`CREATE TABLE IF NOT EXISTS webhook_events (
       id TEXT PRIMARY KEY,
       topic TEXT,
@@ -118,11 +120,11 @@ const dbWrapper = {
       // Convert SQLite ? placeholders to Postgres $1, $2...
       let paramIndex = 1;
       const pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
-      
+
       db.query(pgSql, params)
         .then(res => {
           // Simulate SQLite 'this' context for lastID and changes
-          const context = { lastID: 0, changes: res.rowCount }; 
+          const context = { lastID: 0, changes: res.rowCount };
           // Note: Postgres doesn't return lastID easily on INSERT unless we use RETURNING id
           // We might need to adjust INSERT queries to use 'RETURNING id'
           if (callback) callback.call(context, null);
@@ -140,7 +142,7 @@ const dbWrapper = {
     if (isPostgres) {
       let paramIndex = 1;
       const pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
-      
+
       db.query(pgSql, params)
         .then(res => {
           if (callback) callback(null, res.rows[0]);
@@ -158,7 +160,7 @@ const dbWrapper = {
     if (isPostgres) {
       let paramIndex = 1;
       const pgSql = sql.replace(/\?/g, () => `$${paramIndex++}`);
-      
+
       db.query(pgSql, params)
         .then(res => {
           if (callback) callback(null, res.rows);

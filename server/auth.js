@@ -294,4 +294,43 @@ router.get('/me', (req, res) => {
   );
 });
 
+/**
+ * PUT /api/profile
+ * Updates the user's profile information.
+ */
+router.put('/profile', (req, res) => {
+  if (!req.session || !req.session.user) {
+    return res.status(401).json({ error: 'Not authenticated' });
+  }
+
+  const { firstName, lastName, email, phone } = req.body;
+  const userId = req.session.user.id;
+
+  // Update user in database
+  db.run(
+    'UPDATE users SET first_name = ?, last_name = ?, email = ?, phone = ? WHERE id = ?',
+    [firstName, lastName, email, phone, userId],
+    function(err) {
+      if (err) {
+        console.error('Profile update error:', err);
+        return res.status(500).json({ error: 'Failed to update profile' });
+      }
+
+      // Update session with new data
+      req.session.user = {
+        ...req.session.user,
+        firstName,
+        lastName,
+        email,
+        phone
+      };
+
+      res.json({
+        message: 'Profile updated successfully',
+        user: req.session.user
+      });
+    }
+  );
+});
+
 module.exports = router;

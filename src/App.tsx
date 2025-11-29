@@ -1,6 +1,8 @@
 import React from 'react';
 import { Router, Route } from './utils/Router.jsx';
 import HomePage from './components/HomePage.jsx';
+import Dashboard from './components/DashboardV2';
+import ProfilePage from './components/ProfilePage';
 import NotFoundPage from './components/NotFoundPage.jsx';
 import ProductPage from './components/ProductPage';
 import ShopifyProductsPage from './components/shopify/ShopifyProductsPage';
@@ -19,13 +21,14 @@ import { ShopCartProvider } from './contexts/ShopCartContext';
 
 // Check for required environment variables
 const App = () => {
-// ...existing code...
   return (
     <CartProvider>
       <AuthProvider>
         <ShopCartProvider>
           <Router fallback={<NotFoundPage />}>
             <Route path="/" component={HomePage} />
+            <Route path="/dashboard" component={Dashboard} />
+            <Route path="/profile" component={ProfilePage} />
             <Route path="/products" component={ShopifyProductsPage} />
             <Route path="/product" component={ProductPage} />
             <Route path="/cart" component={ShopifyCartPage} />

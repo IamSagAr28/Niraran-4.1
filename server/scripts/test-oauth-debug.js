@@ -1,6 +1,8 @@
 const { spawn } = require('child_process');
 const http = require('http');
 
+process.env.DEBUG = 'true';
+
 function waitForServer(startProcess) {
   return new Promise((resolve, reject) => {
     const handleData = data => {

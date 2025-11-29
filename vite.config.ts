@@ -56,7 +56,7 @@
     publicDir: 'public',
     server: {
       port: 3002,
-      strictPort: false,
+      strictPort: true,
       open: true,
     },
   });
