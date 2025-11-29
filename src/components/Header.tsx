@@ -236,13 +236,19 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
                 
                 @media (max-width: 899px) {
                   .category-strip {
-                    grid-template-columns: repeat(auto-fit, minmax(80px, 80px)) !important;
+                    display: flex !important;
+                    flex-wrap: nowrap !important;
+                    overflow-x: auto !important;
                     justify-content: start !important;
+                    gap: 1rem !important;
+                    padding-left: 0.5rem;
+                    padding-right: 0.5rem;
                   }
                 }
                 
                 @media (min-width: 900px) {
                   .category-strip {
+                    display: grid !important;
                     overflow-x: visible !important;
                   }
                 }
