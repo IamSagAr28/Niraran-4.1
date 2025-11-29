@@ -5,6 +5,7 @@ import { useCart } from "../contexts/CartContext";
 import { useAuth } from "../contexts/AuthContext";
 import { useShopifyProducts } from "../hooks/useShopifyProducts";
 import { getOptimizedImageUrl } from "../shopify/client";
+import { UserAvatar } from "./UserAvatar";
 
 export function Header({ showCategories = false }: { showCategories?: boolean }) {
   const { navigateTo, currentPath } = useRouter();
@@ -138,10 +139,15 @@ export function Header({ showCategories = false }: { showCategories?: boolean })
             {isAuthenticated ? (
               <button
                 onClick={() => navigateTo('/dashboard')}
-                className="text-[#344e41] hover:text-[#588157] transition-colors"
+                className="focus:outline-none hover:opacity-80 transition-opacity"
                 title="Dashboard"
               >
-                <User className="w-5 h-5" />
+                <UserAvatar
+                  firstName={user?.firstName}
+                  lastName={user?.lastName}
+                  size="sm"
+                  className="rounded-full"
+                />
               </button>
             ) : (
               <a

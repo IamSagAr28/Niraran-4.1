@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Header } from './Header.tsx';
+import { UserAvatar } from './UserAvatar';
 import { Footer } from './Footer';
 import { useAuth } from '../contexts/AuthContext';
 import { useRouter } from '../utils/Router';
@@ -152,9 +153,12 @@ const Dashboard = () => {
 
                             <div className="p-6 space-y-6">
                                 <div className="flex items-center gap-4 mb-6">
-                                    <div className="w-16 h-16 bg-gradient-to-br from-[#588157] to-[#3A5A40] rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
-                                        {user.firstName ? user.firstName.charAt(0).toUpperCase() : 'U'}
-                                    </div>
+                                    <UserAvatar
+                                        firstName={user.firstName}
+                                        lastName={user.lastName}
+                                        size="lg"
+                                        className="rounded-2xl shadow-lg"
+                                    />
                                     <div>
                                         <p className="font-bold text-gray-900 text-lg">{user.firstName} {user.lastName}</p>
                                         <p className="text-gray-500 text-sm">Member since {new Date().getFullYear()}</p>
