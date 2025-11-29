@@ -7,7 +7,7 @@ import { useRouter } from '../utils/Router';
 import { User, ShoppingBag, Heart, Settings, LogOut, Home, Edit3, Save, X, Phone, Mail, ArrowLeft } from 'lucide-react';
 
 const Dashboard = () => {
-    const { user, isAuthenticated, logout, updateProfile } = useAuth();
+    const { user, isAuthenticated, logout, updateProfile, isLoading } = useAuth();
     const { navigateTo } = useRouter();
     const [isEditing, setIsEditing] = useState(false);
     const [formData, setFormData] = useState({
@@ -17,8 +17,19 @@ const Dashboard = () => {
         phone: user?.phone || ''
     });
 
+    useEffect(() => {
+        if (!isLoading && (!isAuthenticated || !user)) {
+            navigateTo('/');
+        }
+    }, [isLoading, isAuthenticated, user, navigateTo]);
+
+    if (isLoading) {
+        return <div className="min-h-screen flex items-center justify-center bg-[#f8f9fa]">
+            <div className="w-12 h-12 border-4 border-[#588157] border-t-transparent rounded-full animate-spin"></div>
+        </div>;
+    }
+
     if (!isAuthenticated || !user) {
-        navigateTo('/');
         return null;
     }
 
