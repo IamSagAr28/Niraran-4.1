@@ -198,6 +198,7 @@ router.get('/google', (req, res) => {
   const DEBUG = process.env.DEBUG === 'true' || process.env.NODE_ENV !== 'production';
   if (DEBUG) {
     console.log('[DEBUG] Google authorizeUrl:', authorizeUrl);
+    console.log('[DEBUG] Redirect URI being sent:', GOOGLE_REDIRECT_URI);
   }
   res.redirect(authorizeUrl);
 });

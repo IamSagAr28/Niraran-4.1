@@ -67,9 +67,9 @@ async function createCustomer({ firstName, lastName, email }) {
  */
 async function findOrCreateCustomer(googleProfile) {
   const { email, given_name, family_name } = googleProfile;
-  
+
   let customer = await findCustomerByEmail(email);
-  
+
   if (customer) {
     console.log(`✅ Found existing Shopify customer: ${customer.id}`);
     return customer;
@@ -81,12 +81,78 @@ async function findOrCreateCustomer(googleProfile) {
     lastName: family_name,
     email: email,
   });
-  
+
   return customer;
+}
+
+/**
+ * Subscribe an email to newsletter (creates/updates customer with marketing consent)
+ * @param {string} email - Email address to subscribe
+ * @returns {Promise<Object>} Result object with success status and customer info
+ */
+async function subscribeToNewsletter(email) {
+  try {
+    // Check if customer already exists
+    let customer = await findCustomerByEmail(email);
+
+    if (customer) {
+      // Update existing customer to enable marketing
+      const updatePayload = {
+        customer: {
+          id: customer.id,
+          accepts_marketing: true,
+          email_marketing_consent: {
+            state: 'subscribed',
+            opt_in_level: 'single_opt_in',
+            consent_updated_at: new Date().toISOString()
+          }
+        }
+      };
+
+      const response = await shopifyClient.put(`/customers/${customer.id}.json`, updatePayload);
+      console.log(`✅ Updated existing customer ${customer.id} with marketing consent`);
+
+      return {
+        success: true,
+        message: 'Successfully subscribed to newsletter',
+        customer: response.data.customer,
+        isNew: false
+      };
+    } else {
+      // Create new customer with marketing consent
+      const createPayload = {
+        customer: {
+          email: email,
+          verified_email: false,
+          send_email_welcome: false,
+          accepts_marketing: true,
+          email_marketing_consent: {
+            state: 'subscribed',
+            opt_in_level: 'single_opt_in',
+            consent_updated_at: new Date().toISOString()
+          }
+        }
+      };
+
+      const response = await shopifyClient.post('/customers.json', createPayload);
+      console.log(`✨ Created new newsletter subscriber: ${response.data.customer.id}`);
+
+      return {
+        success: true,
+        message: 'Successfully subscribed to newsletter',
+        customer: response.data.customer,
+        isNew: true
+      };
+    }
+  } catch (error) {
+    console.error('Error subscribing to newsletter:', error.response?.data || error.message);
+    throw error;
+  }
 }
 
 module.exports = {
   findCustomerByEmail,
   createCustomer,
   findOrCreateCustomer,
+  subscribeToNewsletter,
 };

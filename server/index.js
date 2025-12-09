@@ -5,6 +5,7 @@ require('dotenv').config();
 const authRoutes = require('./auth');
 const webhookRoutes = require('./webhooks');
 const adminRoutes = require('./admin');
+const newsletterRoutes = require('./newsletter');
 const sessionMiddleware = require('./session');
 
 const app = express();
@@ -50,15 +51,8 @@ app.use((req, res, next) => {
   res.removeHeader('Content-Security-Policy');
 
   // Set a very permissive CSP for production to ensure Google Auth and other scripts work
-  res.setHeader(
-    'Content-Security-Policy',
-    "default-src * data: blob: 'unsafe-inline' 'unsafe-eval'; " +
-    "script-src * data: blob: 'unsafe-inline' 'unsafe-eval'; " +
-    "connect-src * data: blob: 'unsafe-inline'; " +
-    "img-src * data: blob: 'unsafe-inline'; " +
-    "frame-src * data: blob:; " +
-    "style-src * data: blob: 'unsafe-inline';"
-  );
+  // CSP removed to allow meta tag to control policy
+  // "Content-Security-Policy", ...
 
   // Add permissive headers for production
   res.setHeader('X-Content-Type-Options', 'nosniff');
@@ -87,6 +81,7 @@ app.use('/api', authRoutes); // Expose /api/me
 app.use('/api/auth', authRoutes); // Expose /api/auth/google/callback for Google OAuth
 app.use('/api/webhooks', webhookRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api/newsletter', newsletterRoutes);
 
 // Health Check
 app.get('/', (req, res) => {
