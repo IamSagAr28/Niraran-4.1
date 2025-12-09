@@ -2,6 +2,7 @@
 // Smart caching system for Shopify data with TTL and invalidation
 
 import type { CachedData } from './types';
+import { safeLocalStorage } from '../utils/storage';
 
 const CACHE_PREFIX = 'shopify_cache_';
 const DEFAULT_TTL = 60 * 1000; // 60 seconds
@@ -40,9 +41,9 @@ export function getFromCache<T>(operationName: string, variables?: Record<string
   }
 
   // Check localStorage
-  try {
-    const stored = localStorage.getItem(key);
-    if (stored) {
+  const stored = safeLocalStorage.getItem(key);
+  if (stored) {
+    try {
       const cached: CachedData<T> = JSON.parse(stored);
       if (isCacheValid(cached)) {
         console.log(`✅ Cache hit (storage): ${operationName}`);
@@ -50,11 +51,12 @@ export function getFromCache<T>(operationName: string, variables?: Record<string
         MEMORY_CACHE.set(key, cached);
         return cached.data;
       } else {
-        localStorage.removeItem(key);
+        safeLocalStorage.removeItem(key);
       }
+    } catch (error) {
+      console.error('Error parsing cached data:', error);
+      safeLocalStorage.removeItem(key);
     }
-  } catch (error) {
-    console.error('Error reading from localStorage:', error);
   }
 
   console.log(`❌ Cache miss: ${operationName}`);
@@ -81,11 +83,7 @@ export function setInCache<T>(
   MEMORY_CACHE.set(key, cacheEntry);
 
   // Store in localStorage for persistence
-  try {
-    localStorage.setItem(key, JSON.stringify(cacheEntry));
-  } catch (error) {
-    console.warn('LocalStorage quota exceeded or not available:', error);
-  }
+  safeLocalStorage.setItem(key, JSON.stringify(cacheEntry));
 }
 
 /**
@@ -94,11 +92,7 @@ export function setInCache<T>(
 export function invalidateCache(operationName: string, variables?: Record<string, any>): void {
   const key = generateCacheKey(operationName, variables);
   MEMORY_CACHE.delete(key);
-  try {
-    localStorage.removeItem(key);
-  } catch (error) {
-    console.warn('Error removing from localStorage:', error);
-  }
+  safeLocalStorage.removeItem(key);
   console.log(`🔄 Cache invalidated: ${operationName}`);
 }
 
@@ -110,16 +104,12 @@ export function clearAllCache(): void {
   MEMORY_CACHE.clear();
 
   // Clear localStorage
-  try {
-    const keys = Object.keys(localStorage);
-    keys.forEach((key) => {
-      if (key.startsWith(CACHE_PREFIX)) {
-        localStorage.removeItem(key);
-      }
-    });
-  } catch (error) {
-    console.warn('Error clearing localStorage:', error);
-  }
+  const keys = safeLocalStorage.keys();
+  keys.forEach((key) => {
+    if (key.startsWith(CACHE_PREFIX)) {
+      safeLocalStorage.removeItem(key);
+    }
+  });
   console.log('🗑️ All Shopify cache cleared');
 }
 
@@ -127,7 +117,7 @@ export function clearAllCache(): void {
  * Get cache statistics (for debugging)
  */
 export function getCacheStats() {
-  const keys = Object.keys(localStorage).filter((k) => k.startsWith(CACHE_PREFIX));
+  const keys = safeLocalStorage.keys().filter((k) => k.startsWith(CACHE_PREFIX));
   return {
     memoryCacheSize: MEMORY_CACHE.size,
     storageCacheSize: keys.length,
@@ -157,21 +147,21 @@ export function watchCacheChanges(callback: () => void): () => void {
 export function initCacheCleanup(interval: number = 5 * 60 * 1000): void {
   // Clean every 5 minutes by default
   setInterval(() => {
-    try {
-      const keys = Object.keys(localStorage);
-      keys.forEach((key) => {
-        if (key.startsWith(CACHE_PREFIX)) {
-          const stored = localStorage.getItem(key);
-          if (stored) {
+    const keys = safeLocalStorage.keys();
+    keys.forEach((key) => {
+      if (key.startsWith(CACHE_PREFIX)) {
+        const stored = safeLocalStorage.getItem(key);
+        if (stored) {
+          try {
             const cached: CachedData<any> = JSON.parse(stored);
             if (!isCacheValid(cached)) {
-              localStorage.removeItem(key);
+              safeLocalStorage.removeItem(key);
             }
+          } catch (e) {
+            safeLocalStorage.removeItem(key);
           }
         }
-      });
-    } catch (error) {
-      console.warn('Error during cache cleanup:', error);
-    }
+      }
+    });
   }, interval);
 }

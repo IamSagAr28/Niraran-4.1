@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useShopifyProducts } from '../hooks/useShopifyProducts';
 import { getOptimizedImageUrl } from '../shopify/client';
 import { ImageWithFallback } from "./figma/ImageWithFallback";
@@ -8,6 +8,8 @@ export function CategoryShowcase() {
   const { products } = useShopifyProducts();
   const { navigateTo } = useRouter();
   const [categories, setCategories] = useState<any[]>([]);
+  const [backgroundOffset, setBackgroundOffset] = useState(0);
+  const sectionRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     if (products && products.length > 0) {
@@ -47,35 +49,133 @@ export function CategoryShowcase() {
     }
   }, [products]);
 
+  // Parallax scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        const windowHeight = window.innerHeight;
+        const sectionHeight = rect.height;
+        
+        // Calculate when section is in viewport
+        if (rect.bottom > 0 && rect.top < windowHeight) {
+          // Calculate how much of the section has scrolled past the viewport
+          // When section top is at viewport top: offset = 0
+          // As user scrolls down, offset increases (background moves up relative to content)
+          const scrollAmount = windowHeight - rect.top;
+          const maxScroll = windowHeight + sectionHeight;
+          const scrollProgress = Math.max(0, Math.min(1, scrollAmount / maxScroll));
+          
+          // Parallax effect: background moves slower than content
+          // Negative values move background up (creating parallax effect)
+          const parallaxSpeed = 0.3; // Adjust this value (0-1) to control parallax intensity
+          const offset = scrollProgress * 30 * parallaxSpeed; // Max 30% movement
+          setBackgroundOffset(offset);
+        } else if (rect.top >= windowHeight) {
+          // Section hasn't entered viewport yet
+          setBackgroundOffset(0);
+        }
+      }
+    };
+
+    // Throttle scroll events for better performance
+    let ticking = false;
+    const throttledScroll = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledScroll, { passive: true });
+    handleScroll(); // Initial calculation
+
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+    };
+  }, []);
+
   return (
-    <section id="products" className="py-12 bg-white">
-      <div className="container mx-auto px-4">
+    <section 
+      ref={sectionRef}
+      id="products" 
+      className="py-16 relative overflow-hidden"
+      style={{
+        backgroundImage: "url('/images/products/texture.jpg')",
+        backgroundSize: 'cover',
+        backgroundPosition: `center ${50 - backgroundOffset}%`,
+        backgroundRepeat: 'no-repeat',
+        backgroundAttachment: 'fixed',
+        willChange: 'background-position', // Optimize for animations
+        paddingTop: 'calc(4rem + 5px)', // py-16 (4rem) + 5px
+        paddingBottom: 'calc(4rem + 105px)', // py-16 (4rem) + 5px + 100px extra
+      }}
+    >
+      {/* Content container with relative positioning to ensure cards stay visible */}
+      <div className="container mx-auto px-4 relative z-10">
         {/* Section Title */}
         <div className="text-center mb-12">
-          <h2 className="text-3xl mb-3 text-[#344e41]">Shop by Category</h2>
-          <p className="text-[#3a5a40]">Explore our diverse range of eco-friendly products</p>
+          <div className="inline-block px-6 py-4 rounded-lg bg-black/40 backdrop-blur-sm">
+            <h2 
+              className="text-3xl mb-3 font-bold text-white"
+              style={{
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              Shop by Category
+            </h2>
+            <p 
+              className="font-bold text-white"
+              style={{
+                textShadow: '2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 8px rgba(0, 0, 0, 0.5)',
+              }}
+            >
+              Explore our diverse range of eco-friendly products
+            </p>
+          </div>
         </div>
 
         {/* Category Cards */}
         <div className="grid md:grid-cols-4 gap-6">
           {categories.length > 0 ? (
-            categories.map((category) => (
-              <div key={category.handle} className="group cursor-pointer">
-                <div className="aspect-[3/4] bg-[#dad7cd]/30 rounded-lg mb-4 overflow-hidden">
-                  <ImageWithFallback
-                    src={getOptimizedImageUrl(category.image, 400, 500)}
-                    alt={category.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                </div>
-                <div className="text-center">
-                  <h3 className="text-lg mb-2 text-[#344e41]">{category.name}</h3>
-                  <button 
-                    onClick={() => navigateTo('/products')}
-                    className="mt-2 px-6 py-2 bg-[#588157] text-white text-sm hover:bg-[#3a5a40] rounded-lg transition-colors"
-                  >
-                    Explore
-                  </button>
+            categories.map((category, index) => (
+              <div 
+                key={category.handle} 
+                className="group cursor-pointer"
+                onClick={() => navigateTo('/products')}
+              >
+                <div 
+                  className="aspect-[3/4] bg-white overflow-hidden relative flex flex-col"
+                  style={{
+                    border: '3px solid white',
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.15)',
+                    borderRadius: '24px',
+                  }}
+                >
+                  <div className="flex-1 relative overflow-hidden" style={{ borderTopLeftRadius: '21px', borderTopRightRadius: '21px' }}>
+                    <ImageWithFallback
+                      src={getOptimizedImageUrl(category.image, 400, 500)}
+                      alt={category.name}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                      style={{ borderTopLeftRadius: '21px', borderTopRightRadius: '21px' }}
+                    />
+                    {/* Shop Now Overlay */}
+                    <div 
+                      className="absolute bottom-0 left-0 bg-black/60 px-4 py-2 text-white text-sm font-semibold"
+                      style={{
+                        borderTopRightRadius: '8px',
+                      }}
+                    >
+                      Shop Now →
+                    </div>
+                  </div>
+                  {/* Category Name - Inside the card at the bottom */}
+                  <div className="text-center py-3 bg-white">
+                    <h3 className="text-lg font-bold text-black">{category.name.toUpperCase()}</h3>
+                  </div>
                 </div>
               </div>
             ))

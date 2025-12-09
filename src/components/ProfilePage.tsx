@@ -75,14 +75,14 @@ const ProfilePage = () => {
           <div className="flex items-center gap-4 mb-4">
             <button
               onClick={() => navigateTo('/dashboard')}
-              className="flex items-center space-x-2 text-gray-500 hover:text-[#588157] transition-colors focus:outline-none focus:ring-2 focus:ring-[#588157] focus:ring-offset-2 rounded-lg px-3 py-2"
+              className="flex items-center space-x-2 text-gray-500 hover:text-[#F8D548] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F8D548] focus:ring-offset-2 rounded-lg px-3 py-2"
             >
               <ArrowLeft className="w-5 h-5" />
               <span>Back</span>
             </button>
             <button
               onClick={() => navigateTo('/')}
-              className="flex items-center space-x-2 text-gray-500 hover:text-[#588157] transition-colors focus:outline-none focus:ring-2 focus:ring-[#588157] focus:ring-offset-2 rounded-lg px-3 py-2"
+              className="flex items-center space-x-2 text-gray-500 hover:text-[#F8D548] transition-colors focus:outline-none focus:ring-2 focus:ring-[#F8D548] focus:ring-offset-2 rounded-lg px-3 py-2"
             >
               <Home className="w-5 h-5" />
               <span>Home</span>
@@ -101,12 +101,12 @@ const ProfilePage = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#588157] focus:ring-offset-2 ${activeTab === tab.id
-                      ? 'bg-[#588157]/10 text-[#588157]'
+                    className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#F8D548] focus:ring-offset-2 ${activeTab === tab.id
+                      ? 'bg-[#F8D548]/10 text-[#DBB520]'
                       : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                       }`}
                   >
-                    <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-[#588157]' : 'text-gray-400'}`} />
+                    <tab.icon className={`w-5 h-5 ${activeTab === tab.id ? 'text-[#DBB520]' : 'text-gray-400'}`} />
                     {tab.label}
                     {activeTab === tab.id && <ChevronRight className="w-4 h-4 ml-auto" />}
                   </button>
@@ -131,7 +131,7 @@ const ProfilePage = () => {
                 <div className="p-6 md:p-8 border-b border-gray-100">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-4">
-                      <div className="w-16 h-16 bg-gradient-to-br from-[#588157] to-[#3A5A40] rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-lg">
+                      <div className="w-16 h-16 bg-gradient-to-br from-[#F8D548] to-[#DBB520] rounded-2xl flex items-center justify-center text-[#2A2A2A] text-2xl font-bold shadow-lg">
                         {user.firstName[0]}
                       </div>
                       <div>
@@ -142,7 +142,7 @@ const ProfilePage = () => {
                     {!isEditing ? (
                       <button
                         onClick={() => setIsEditing(true)}
-                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#588157] focus:ring-offset-2"
+                        className="flex items-center gap-2 px-4 py-2 bg-white border border-gray-200 text-gray-700 rounded-lg hover:bg-gray-50 hover:border-gray-300 transition-all shadow-sm focus:outline-none focus:ring-2 focus:ring-[#F8D548] focus:ring-offset-2"
                       >
                         <Edit className="w-4 h-4" />
                         <span>Edit</span>
@@ -152,7 +152,7 @@ const ProfilePage = () => {
                         <button
                           onClick={handleSave}
                           disabled={loading}
-                          className="flex items-center gap-2 px-4 py-2 bg-[#588157] text-white rounded-lg hover:bg-[#3A5A40] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#588157] focus:ring-offset-2"
+                          className="flex items-center gap-2 px-4 py-2 bg-[#F8D548] text-[#2A2A2A] rounded-lg hover:bg-[#DBB520] transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-[#F8D548] focus:ring-offset-2"
                         >
                           <Save className="w-4 h-4" />
                           <span>{loading ? 'Saving...' : 'Save'}</span>
@@ -180,7 +180,7 @@ const ProfilePage = () => {
                           name="firstName"
                           value={formData.firstName}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#588157] focus:border-transparent transition-all focus:outline-none"
+                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F8D548] focus:border-transparent transition-all focus:outline-none"
                         />
                       ) : (
                         <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 border border-gray-100">
@@ -196,7 +196,7 @@ const ProfilePage = () => {
                           name="lastName"
                           value={formData.lastName}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#588157] focus:border-transparent transition-all focus:outline-none"
+                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F8D548] focus:border-transparent transition-all focus:outline-none"
                         />
                       ) : (
                         <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 border border-gray-100">
@@ -212,7 +212,7 @@ const ProfilePage = () => {
                           name="email"
                           value={formData.email}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#588157] focus:border-transparent transition-all focus:outline-none"
+                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F8D548] focus:border-transparent transition-all focus:outline-none"
                         />
                       ) : (
                         <div className="px-4 py-3 bg-gray-50 rounded-lg text-gray-900 border border-gray-100 flex items-center gap-2">
@@ -229,7 +229,7 @@ const ProfilePage = () => {
                           name="phone"
                           value={formData.phone}
                           onChange={handleInputChange}
-                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#588157] focus:border-transparent transition-all focus:outline-none"
+                          className="w-full px-4 py-2.5 rounded-lg border border-gray-300 focus:ring-2 focus:ring-[#F8D548] focus:border-transparent transition-all focus:outline-none"
                           placeholder="+1 (555) 000-0000"
                         />
                       ) : (
@@ -268,7 +268,7 @@ const ProfilePage = () => {
 
                   <div className="flex items-center justify-between p-4 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
                     <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-green-50 rounded-full flex items-center justify-center text-green-600">
+                      <div className="w-10 h-10 bg-yellow-50 rounded-full flex items-center justify-center text-[#DBB520]">
                         <Shield className="w-5 h-5" />
                       </div>
                       <div>
@@ -276,7 +276,7 @@ const ProfilePage = () => {
                         <p className="text-sm text-gray-500">Add an extra layer of security</p>
                       </div>
                     </div>
-                    <button className="px-4 py-2 text-sm font-medium text-[#588157] bg-[#588157]/10 rounded-lg hover:bg-[#588157]/20 transition-colors">
+                    <button className="px-4 py-2 text-sm font-medium text-[#2A2A2A] bg-[#F8D548]/20 rounded-lg hover:bg-[#F8D548]/30 transition-colors">
                       Enable
                     </button>
                   </div>
@@ -296,7 +296,7 @@ const ProfilePage = () => {
                       <span className="text-gray-700 font-medium">{item}</span>
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input type="checkbox" className="sr-only peer" defaultChecked={idx !== 2} />
-                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#588157]"></div>
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-yellow-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#F8D548]"></div>
                       </label>
                     </div>
                   ))}

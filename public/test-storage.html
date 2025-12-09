@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storage Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            background: white;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .test-result.error {
+            border-left-color: #f44336;
+        }
+
+        .test-result.warning {
+            border-left-color: #ff9800;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        code {
+            background: #eee;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🔍 Storage & API Test Page</h1>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+
+        function addResult(message, type = 'success') {
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.innerHTML = message;
+            results.appendChild(div);
+        }
+
+        // Test 1: LocalStorage
+        try {
+            localStorage.setItem('test', 'value');
+            localStorage.removeItem('test');
+            addResult('✅ <strong>localStorage</strong> is accessible', 'success');
+        } catch (e) {
+            addResult('❌ <strong>localStorage</strong> blocked: ' + e.message, 'error');
+        }
+
+        // Test 2: SessionStorage
+        try {
+            sessionStorage.setItem('test', 'value');
+            sessionStorage.removeItem('test');
+            addResult('✅ <strong>sessionStorage</strong> is accessible', 'success');
+        } catch (e) {
+            addResult('❌ <strong>sessionStorage</strong> blocked: ' + e.message, 'error');
+        }
+
+        // Test 3: API Connection
+        fetch('http://localhost:3001/api/me', {
+            credentials: 'include'
+        })
+            .then(response => {
+                if (response.status === 401) {
+                    addResult('✅ <strong>Backend API</strong> is reachable (401 is expected when not logged in)', 'success');
+                } else {
+                    addResult('✅ <strong>Backend API</strong> responded with status: ' + response.status, 'success');
+                }
+            })
+            .catch(error => {
+                addResult('❌ <strong>Backend API</strong> connection failed: ' + error.message, 'error');
+            });
+
+        // Test 4: Environment
+        addResult('📍 <strong>Current URL:</strong> <code>' + window.location.href + '</code>', 'success');
+        addResult('🌐 <strong>User Agent:</strong> <code>' + navigator.userAgent.substring(0, 80) + '...</code>', 'success');
+
+        // Test 5: Console check
+        console.log('%c✅ Console is working', 'color: green; font-weight: bold');
+        addResult('✅ <strong>Console</strong> is working (check browser console)', 'success');
+    </script>
+</body>
+
+</html>

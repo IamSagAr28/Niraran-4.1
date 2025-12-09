@@ -1,0 +1,15 @@
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFF6D1" />
+      <stop offset="100%" stop-color="#F8D548" />
+    </linearGradient>
+    <pattern id="pattern-circles" x="0" y="0" width="100" height="100" patternUnits="userSpaceOnUse">
+      <circle cx="50" cy="50" r="20" fill="#DBB520" fill-opacity="0.1"/>
+    </pattern>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg-gradient)"/>
+  <rect width="1920" height="1080" fill="url(#pattern-circles)"/>
+  <circle cx="1500" cy="540" r="400" fill="#DBB520" fill-opacity="0.2"/>
+  <circle cx="200" cy="800" r="300" fill="#FFF6D1" fill-opacity="0.3"/>
+</svg>

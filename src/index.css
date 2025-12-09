@@ -1,7 +1,11 @@
 /*! tailwindcss v4.1.3 | MIT License | https://tailwindcss.com */
 @layer properties {
   @supports (((-webkit-hyphens: none)) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color: rgb(from red r g b)))) {
-    *, :before, :after, ::backdrop {
+
+    *,
+    :before,
+    :after,
+    ::backdrop {
       --tw-translate-x: 0;
       --tw-translate-y: 0;
       --tw-translate-z: 0;
@@ -46,9 +50,13 @@
 }
 
 @layer theme {
-  :root, :host {
+
+  :root,
+  :host {
     --font-sans: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    --font-heading: 'Poppins', var(--font-sans);
+    --font-body: 'Inter', var(--font-sans);
     --color-gray-100: oklch(.967 .003 264.542);
     --color-white: #fff;
     --spacing: .25rem;
@@ -92,7 +100,11 @@
 }
 
 @layer base {
-  *, :after, :before, ::backdrop {
+
+  *,
+  :after,
+  :before,
+  ::backdrop {
     box-sizing: border-box;
     border: 0 solid;
     margin: 0;
@@ -106,11 +118,12 @@
     padding: 0;
   }
 
-  html, :host {
+  html,
+  :host {
     -webkit-text-size-adjust: 100%;
     tab-size: 4;
     line-height: 1.5;
-    font-family: var(--default-font-family, ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji");
+    font-family: var(--font-body);
     font-feature-settings: var(--default-font-feature-settings, normal);
     font-variation-settings: var(--default-font-variation-settings, normal);
     -webkit-tap-highlight-color: transparent;
@@ -131,7 +144,12 @@
     text-decoration: underline dotted;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-size: inherit;
     font-weight: inherit;
   }
@@ -143,11 +161,15 @@
     text-decoration: inherit;
   }
 
-  b, strong {
+  b,
+  strong {
     font-weight: bolder;
   }
 
-  code, kbd, samp, pre {
+  code,
+  kbd,
+  samp,
+  pre {
     font-family: var(--default-mono-font-family, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
     font-feature-settings: var(--default-mono-font-feature-settings, normal);
     font-variation-settings: var(--default-mono-font-variation-settings, normal);
@@ -158,7 +180,8 @@
     font-size: 80%;
   }
 
-  sub, sup {
+  sub,
+  sup {
     vertical-align: baseline;
     font-size: 75%;
     line-height: 0;
@@ -191,21 +214,35 @@
     display: list-item;
   }
 
-  ol, ul, menu {
+  ol,
+  ul,
+  menu {
     list-style: none;
   }
 
-  img, svg, video, canvas, audio, iframe, embed, object {
-    vertical-align: middle;
+  img,
+  svg,
+  video,
+  canvas,
+  audio,
+  iframe,
+  embed,
+  object {
+
     display: block;
   }
 
-  img, video {
+  img,
+  video {
     max-width: 100%;
     height: auto;
   }
 
-  button, input, select, optgroup, textarea {
+  button,
+  input,
+  select,
+  optgroup,
+  textarea {
     font: inherit;
     font-feature-settings: inherit;
     font-variation-settings: inherit;
@@ -311,7 +348,8 @@
     box-shadow: none;
   }
 
-  button, input:where([type="button"], [type="reset"], [type="submit"]) {
+  button,
+  input:where([type="button"], [type="reset"], [type="submit"]) {
     appearance: button;
   }
 
@@ -388,7 +426,8 @@
     line-height: 1.5;
   }
 
-  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) label, :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) button {
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) label,
+  :where(:not(:has([class*=" text-"]), :not(:has([class^="text-"])))) button {
     font-size: var(--text-base);
     font-weight: var(--font-weight-medium);
     line-height: 1.5;
@@ -454,31 +493,31 @@
     width: 100%;
   }
 
-  @media (width >= 40rem) {
+  @media (width >=40rem) {
     .container {
       max-width: 40rem;
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .container {
       max-width: 48rem;
     }
   }
 
-  @media (width >= 64rem) {
+  @media (width >=64rem) {
     .container {
       max-width: 64rem;
     }
   }
 
-  @media (width >= 80rem) {
+  @media (width >=80rem) {
     .container {
       max-width: 80rem;
     }
   }
 
-  @media (width >= 96rem) {
+  @media (width >=96rem) {
     .container {
       max-width: 96rem;
     }
@@ -849,43 +888,43 @@
     border-bottom-width: 1px;
   }
 
-  .border-\[\#3a5a40\] {
-    border-color: #3a5a40;
+  .border-\[\#DBB520\] {
+    border-color: #DBB520;
   }
 
-  .border-\[\#588157\] {
-    border-color: #588157;
+  .border-\[\#F8D548\] {
+    border-color: #F8D548;
   }
 
-  .border-\[\#a3b18a\]\/30 {
+  .border-\[\#DBB520\]\/30 {
     border-color: oklab(73.9043% -.0313751 .0468442 / .3);
   }
 
-  .bg-\[\#3a5a40\] {
-    background-color: #3a5a40;
+  .bg-\[\#DBB520\] {
+    background-color: #DBB520;
   }
 
-  .bg-\[\#344e41\] {
-    background-color: #344e41;
+  .bg-\[\#2A2A2A\] {
+    background-color: #2A2A2A;
   }
 
-  .bg-\[\#588157\] {
-    background-color: #588157;
+  .bg-\[\#F8D548\] {
+    background-color: #F8D548;
   }
 
-  .bg-\[\#a3b18a\] {
-    background-color: #a3b18a;
+  .bg-\[\#DBB520\] {
+    background-color: #DBB520;
   }
 
-  .bg-\[\#a3b18a\]\/40 {
+  .bg-\[\#DBB520\]\/40 {
     background-color: oklab(73.9043% -.0313751 .0468442 / .4);
   }
 
-  .bg-\[\#dad7cd\] {
-    background-color: #dad7cd;
+  .bg-\[\#FFF6D1\] {
+    background-color: #FFF6D1;
   }
 
-  .bg-\[\#dad7cd\]\/30 {
+  .bg-\[\#FFF6D1\]\/30 {
     background-color: oklab(87.8751% -.000728518 .0139094 / .3);
   }
 
@@ -932,18 +971,18 @@
     background-image: linear-gradient(var(--tw-gradient-stops));
   }
 
-  .from-\[\#3a5a40\] {
-    --tw-gradient-from: #3a5a40;
+  .from-\[\#DBB520\] {
+    --tw-gradient-from: #DBB520;
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .from-\[\#344e41\]\/80 {
+  .from-\[\#2A2A2A\]\/80 {
     --tw-gradient-from: oklab(39.8552% -.0368247 .0117797 / .8);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .from-\[\#dad7cd\] {
-    --tw-gradient-from: #dad7cd;
+  .from-\[\#FFF6D1\] {
+    --tw-gradient-from: #FFF6D1;
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
@@ -952,18 +991,18 @@
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .to-\[\#3a5a40\]\/80 {
+  .to-\[\#DBB520\]\/80 {
     --tw-gradient-to: oklab(43.4743% -.0490342 .0289525 / .8);
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .to-\[\#588157\] {
-    --tw-gradient-to: #588157;
+  .to-\[\#F8D548\] {
+    --tw-gradient-to: #F8D548;
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .to-\[\#dad7cd\] {
-    --tw-gradient-to: #dad7cd;
+  .to-\[\#FFF6D1\] {
+    --tw-gradient-to: #FFF6D1;
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
@@ -972,8 +1011,8 @@
     --tw-gradient-stops: var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position));
   }
 
-  .fill-\[\#588157\] {
-    fill: #588157;
+  .fill-\[\#F8D548\] {
+    fill: #F8D548;
   }
 
   .object-cover {
@@ -1097,24 +1136,24 @@
     white-space: nowrap;
   }
 
-  .text-\[\#3a5a40\] {
-    color: #3a5a40;
+  .text-\[\#DBB520\] {
+    color: #DBB520;
   }
 
-  .text-\[\#344e41\] {
-    color: #344e41;
+  .text-\[\#2A2A2A\] {
+    color: #2A2A2A;
   }
 
-  .text-\[\#588157\] {
-    color: #588157;
+  .text-\[\#F8D548\] {
+    color: #F8D548;
   }
 
-  .text-\[\#a3b18a\] {
-    color: #a3b18a;
+  .text-\[\#DBB520\] {
+    color: #DBB520;
   }
 
-  .text-\[\#dad7cd\] {
-    color: #dad7cd;
+  .text-\[\#FFF6D1\] {
+    color: #FFF6D1;
   }
 
   .text-white {
@@ -1158,8 +1197,8 @@
     box-shadow: var(--tw-inset-shadow), var(--tw-inset-ring-shadow), var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow);
   }
 
-  .ring-\[\#588157\] {
-    --tw-ring-color: #588157;
+  .ring-\[\#F8D548\] {
+    --tw-ring-color: #F8D548;
   }
 
   .transition-all {
@@ -1220,8 +1259,8 @@
   }
 
   @media (hover: hover) {
-    .group-hover\:bg-\[\#588157\]:is(:where(.group):hover *) {
-      background-color: #588157;
+    .group-hover\:bg-\[\#F8D548\]:is(:where(.group):hover *) {
+      background-color: #F8D548;
     }
   }
 
@@ -1231,11 +1270,11 @@
     }
   }
 
-  .placeholder\:text-\[\#3a5a40\]\/60::placeholder {
+  .placeholder\:text-\[\#DBB520\]\/60::placeholder {
     color: oklab(43.4743% -.0490342 .0289525 / .6);
   }
 
-  .placeholder\:text-\[\#dad7cd\]\/60::placeholder {
+  .placeholder\:text-\[\#FFF6D1\]\/60::placeholder {
     color: oklab(87.8751% -.000728518 .0139094 / .6);
   }
 
@@ -1258,38 +1297,38 @@
   }
 
   @media (hover: hover) {
-    .hover\:bg-\[\#3a5a40\]:hover {
-      background-color: #3a5a40;
+    .hover\:bg-\[\#DBB520\]:hover {
+      background-color: #DBB520;
     }
   }
 
   @media (hover: hover) {
-    .hover\:bg-\[\#344e41\]:hover {
-      background-color: #344e41;
+    .hover\:bg-\[\#2A2A2A\]:hover {
+      background-color: #2A2A2A;
     }
   }
 
   @media (hover: hover) {
-    .hover\:bg-\[\#588157\]:hover {
-      background-color: #588157;
+    .hover\:bg-\[\#F8D548\]:hover {
+      background-color: #F8D548;
     }
   }
 
   @media (hover: hover) {
-    .hover\:bg-\[\#a3b18a\]:hover {
-      background-color: #a3b18a;
+    .hover\:bg-\[\#DBB520\]:hover {
+      background-color: #DBB520;
     }
   }
 
   @media (hover: hover) {
-    .hover\:bg-\[\#a3b18a\]\/20:hover {
+    .hover\:bg-\[\#DBB520\]\/20:hover {
       background-color: oklab(73.9043% -.0313751 .0468442 / .2);
     }
   }
 
   @media (hover: hover) {
-    .hover\:bg-\[\#dad7cd\]:hover {
-      background-color: #dad7cd;
+    .hover\:bg-\[\#FFF6D1\]:hover {
+      background-color: #FFF6D1;
     }
   }
 
@@ -1300,14 +1339,14 @@
   }
 
   @media (hover: hover) {
-    .hover\:text-\[\#588157\]:hover {
-      color: #588157;
+    .hover\:text-\[\#F8D548\]:hover {
+      color: #F8D548;
     }
   }
 
   @media (hover: hover) {
-    .hover\:text-\[\#a3b18a\]:hover {
-      color: #a3b18a;
+    .hover\:text-\[\#DBB520\]:hover {
+      color: #DBB520;
     }
   }
 
@@ -1331,8 +1370,8 @@
     }
   }
 
-  .focus\:border-\[\#a3b18a\]:focus {
-    border-color: #a3b18a;
+  .focus\:border-\[\#DBB520\]:focus {
+    border-color: #DBB520;
   }
 
   .focus\:outline-none:focus {
@@ -1340,49 +1379,49 @@
     outline-style: none;
   }
 
-  @media (width >= 40rem) {
+  @media (width >=40rem) {
     .sm\:flex-row {
       flex-direction: row;
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:flex {
       display: flex;
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:hidden {
       display: none;
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:grid-cols-2 {
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:grid-cols-3 {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:grid-cols-4 {
       grid-template-columns: repeat(4, minmax(0, 1fr));
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:grid-cols-5 {
       grid-template-columns: repeat(5, minmax(0, 1fr));
     }
   }
 
-  @media (width >= 48rem) {
+  @media (width >=48rem) {
     .md\:flex-row {
       flex-direction: row;
     }
@@ -1392,52 +1431,39 @@
 :root {
   --font-size: 16px;
   --background: #fff;
-  --foreground: #344e41;
+  --foreground: #2A2A2A;
   --card: #fff;
-  --card-foreground: #344e41;
+  --card-foreground: #2A2A2A;
   --popover: #fff;
-  --popover-foreground: #344e41;
-  --primary: #3a5a40;
-  --primary-foreground: #fff;
-  --secondary: #a3b18a;
-  --secondary-foreground: #344e41;
-  --muted: #dad7cd;
-  --muted-foreground: #588157;
-  --accent: #588157;
-  --accent-foreground: #fff;
+  --popover-foreground: #2A2A2A;
+  --primary: #F8D548;
+  --primary-foreground: #2A2A2A;
+  --secondary: #FFF6D1;
+  --secondary-foreground: #2A2A2A;
+  --muted: #FFF6D1;
+  --muted-foreground: #DBB520;
+  --accent: #FFF6D1;
+  --accent-foreground: #2A2A2A;
   --destructive: #d4183d;
   --destructive-foreground: #fff;
-  --border: #58815733;
+  --border: #F8D548;
   --input: transparent;
-  --input-background: #dad7cd;
-  --switch-background: #a3b18a;
+  --input-background: #FFF6D1;
+  --switch-background: #F8D548;
   --font-weight-medium: 500;
   --font-weight-normal: 400;
-  --ring: #588157;
-  --chart-1: #588157;
-  --chart-2: #3a5a40;
-  --chart-3: #a3b18a;
-  --chart-4: #dad7cd;
-  --chart-5: #344e41;
+  --ring: #DBB520;
+  --chart-1: #F8D548;
+  --chart-2: #DBB520;
+  --chart-3: #FFF6D1;
+  --chart-4: #2A2A2A;
+  --chart-5: #F8D548;
   --radius: .625rem;
-  --sidebar: #344e41;
+  --sidebar: #2A2A2A;
   --sidebar-foreground: #fff;
-  --sidebar-primary: #588157;
-  --sidebar-primary-foreground: #fff;
-  --sidebar-accent: #3a5a40;
-  --sidebar-accent-foreground: #fff;
-  --sidebar-border: #588157;
-  --sidebar-ring: #588157;
-  --timberwolf: #dad7cd;
-  --sage: #a3b18a;
-  --fern-green: #588157;
-  --hunter-green: #3a5a40;
-  --brunswick-green: #344e41;
-}
-
-.dark {
-  --background: oklch(.145 0 0);
-  --foreground: oklch(.985 0 0);
+  --sidebar-primary: #F8D548;
+  --sidebar-primary-foreground: #2A2A2A;
+  --sidebar-accent: #FFF6D1;
   --card: oklch(.145 0 0);
   --card-foreground: oklch(.985 0 0);
   --popover: oklch(.145 0 0);
@@ -1697,4 +1723,11 @@ html {
 @property --tw-ease {
   syntax: "*";
   inherits: false
+}
+
+.font-heading {
+    font-family: var(--font-heading);
+}
+.font-body {
+    font-family: var(--font-body);
 }

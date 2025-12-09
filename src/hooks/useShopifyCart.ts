@@ -10,6 +10,7 @@ import {
   removeFromCart,
   fetchCart,
 } from '../shopify/client';
+import { safeLocalStorage } from '../utils/storage';
 
 const CART_ID_KEY = 'shopify_cart_id';
 
@@ -35,7 +36,7 @@ export function useShopifyCart(): UseShopifyCartState {
     const initializeCart = async () => {
       try {
         setLoading(true);
-        const savedCartId = localStorage.getItem(CART_ID_KEY);
+        const savedCartId = safeLocalStorage.getItem(CART_ID_KEY);
 
         let cartData: ShopifyCart | null = null;
 
@@ -47,7 +48,7 @@ export function useShopifyCart(): UseShopifyCartState {
         if (!cartData) {
           // Create new cart if none exists or recovery failed
           cartData = await createCart();
-          localStorage.setItem(CART_ID_KEY, cartData.id);
+          safeLocalStorage.setItem(CART_ID_KEY, cartData.id);
         }
 
         setCart(cartData);

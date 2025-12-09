@@ -6,7 +6,7 @@ export function HeroSlideshow() {
 
   const slides = [
     {
-      image: "/images/hero/hero-1.png",
+      image: "/images/hero/hero1.jpg",
       tag: "Sustainable Living Made Beautiful",
       title: "Transforming Waste into",
       highlight: "Wonderful Products",
@@ -15,7 +15,7 @@ export function HeroSlideshow() {
       secondaryCTA: "Learn More"
     },
     {
-      image: "/images/hero/hero-2.png",
+      image: "/images/hero/hero2.jpg",
       tag: "Handcrafted Excellence",
       title: "Every Product Tells",
       highlight: "A Story",
@@ -24,13 +24,40 @@ export function HeroSlideshow() {
       secondaryCTA: "Our Story"
     },
     {
-      image: "/images/hero/hero-3.png",
+      image: "/images/hero/hero3.jpg",
       tag: "Join the Movement",
       title: "Building a",
       highlight: "Circular Economy",
       description: "Each purchase contributes to a sustainable future and empowers local communities.",
       primaryCTA: "Get Started",
       secondaryCTA: "Join Workshop"
+    },
+    {
+      image: "/images/hero/hero4.jpg",
+      tag: "New Arrivals",
+      title: "Freshly Crafted",
+      highlight: "Just For You",
+      description: "Check out the latest additions to our sustainable collection.",
+      primaryCTA: "Shop New",
+      secondaryCTA: "See What's New"
+    },
+    {
+      image: "/images/hero/hero5.jpg",
+      tag: "Gifts That Give Back",
+      title: "Meaningful Presents",
+      highlight: "For Every Occasion",
+      description: "Find the perfect eco-friendly gift that makes a difference.",
+      primaryCTA: "Browse Gifts",
+      secondaryCTA: "Gifting Guide"
+    },
+    {
+      image: "/images/hero/hero6.jpg",
+      tag: "Our Commitment",
+      title: "Sustainability in",
+      highlight: "Every Stitch",
+      description: "Learn about our process and our dedication to a greener planet.",
+      primaryCTA: "Our Process",
+      secondaryCTA: "Learn More"
     }
   ];
 
@@ -100,7 +127,7 @@ export function HeroSlideshow() {
   return (
     <section style={{
       width: '100%',
-      height: '600px',
+      height: '910px',
       position: 'relative',
       overflow: 'hidden'
     }}>
@@ -114,7 +141,8 @@ export function HeroSlideshow() {
             left: 0,
             width: '100%',
             height: '100%',
-            backgroundImage: `url(${slide.image})`,
+            backgroundColor: '#2A2A2A', // Fallback color
+            backgroundImage: `url(${slide.image}?t=${new Date().getTime()})`,
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             opacity: index === currentSlide ? 1 : 0,
@@ -131,7 +159,7 @@ export function HeroSlideshow() {
         left: 0,
         width: '100%',
         height: '100%',
-        background: 'linear-gradient(to right, rgba(52, 78, 65, 0.4), rgba(58, 90, 64, 0.5))',
+        background: 'linear-gradient(to right, rgba(42, 42, 42, 0.4), rgba(42, 42, 42, 0.5))',
         zIndex: 1
       }} />
 
@@ -154,13 +182,13 @@ export function HeroSlideshow() {
         }}>
           <div style={{ maxWidth: '672px' }}>
             {/* Tag */}
-            <div 
+            <div
               key={`tag-${currentSlide}`}
               style={{
                 display: 'inline-block',
                 padding: '8px 16px',
-                backgroundColor: '#a3b18a',
-                color: '#344e41',
+                backgroundColor: '#F8D548',
+                color: '#2A2A2A',
                 borderRadius: '9999px',
                 fontSize: '14px',
                 marginBottom: '24px',
@@ -173,7 +201,7 @@ export function HeroSlideshow() {
             </div>
 
             {/* Title */}
-            <h1 
+            <h1
               key={`title-${currentSlide}`}
               style={{
                 fontSize: '48px',
@@ -187,15 +215,15 @@ export function HeroSlideshow() {
               }}
             >
               {currentSlideData.title}{' '}
-              <span style={{ color: '#a3b18a' }}>{currentSlideData.highlight}</span>
+              <span style={{ color: '#F8D548' }}>{currentSlideData.highlight}</span>
             </h1>
 
             {/* Description */}
-            <p 
+            <p
               key={`desc-${currentSlide}`}
               style={{
                 fontSize: '18px',
-                color: '#dad7cd',
+                color: '#FFF6D1',
                 marginBottom: '32px',
                 lineHeight: '1.6',
                 opacity: 0,
@@ -207,11 +235,11 @@ export function HeroSlideshow() {
             </p>
 
             {/* Buttons */}
-            <div 
+            <div
               key={`cta-${currentSlide}`}
-              style={{ 
-                display: 'flex', 
-                gap: '16px', 
+              style={{
+                display: 'flex',
+                gap: '16px',
                 flexWrap: 'wrap',
                 opacity: 0,
                 transform: 'translateY(20px)',
@@ -220,8 +248,8 @@ export function HeroSlideshow() {
             >
               <button style={{
                 padding: '12px 32px',
-                backgroundColor: '#588157',
-                color: 'white',
+                backgroundColor: '#F8D548',
+                color: '#2A2A2A',
                 border: 'none',
                 borderRadius: '8px',
                 fontSize: '16px',
@@ -230,17 +258,17 @@ export function HeroSlideshow() {
                 transition: 'all 0.3s ease',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
               }}
-              onClick={() => handlePrimaryCTA(currentSlide)}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = '#a3b18a';
-                e.target.style.color = '#344e41';
-                e.target.style.transform = 'scale(1.05)';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = '#588157';
-                e.target.style.color = 'white';
-                e.target.style.transform = 'scale(1)';
-              }}>
+                onClick={() => handlePrimaryCTA(currentSlide)}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = '#DBB520';
+                  e.target.style.color = '#2A2A2A';
+                  e.target.style.transform = 'scale(1.05)';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = '#F8D548';
+                  e.target.style.color = '#2A2A2A';
+                  e.target.style.transform = 'scale(1)';
+                }}>
                 {currentSlideData.primaryCTA}
               </button>
               <button style={{
@@ -254,15 +282,15 @@ export function HeroSlideshow() {
                 fontWeight: '500',
                 transition: 'all 0.3s ease'
               }}
-              onClick={() => handleSecondaryCTA(currentSlide)}
-              onMouseOver={(e) => {
-                e.target.style.backgroundColor = 'white';
-                e.target.style.color = '#3a5a40';
-              }}
-              onMouseOut={(e) => {
-                e.target.style.backgroundColor = 'transparent';
-                e.target.style.color = 'white';
-              }}>
+                onClick={() => handleSecondaryCTA(currentSlide)}
+                onMouseOver={(e) => {
+                  e.target.style.backgroundColor = 'white';
+                  e.target.style.color = '#DBB520';
+                }}
+                onMouseOut={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = 'white';
+                }}>
                 {currentSlideData.secondaryCTA}
               </button>
             </div>
@@ -288,7 +316,7 @@ export function HeroSlideshow() {
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: '20px',
-          color: '#3a5a40',
+          color: '#DBB520',
           zIndex: 3,
           transition: 'all 0.3s ease',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
@@ -322,7 +350,7 @@ export function HeroSlideshow() {
           alignItems: 'center',
           justifyContent: 'center',
           fontSize: '20px',
-          color: '#3a5a40',
+          color: '#DBB520',
           zIndex: 3,
           transition: 'all 0.3s ease',
           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.15)'
@@ -356,7 +384,7 @@ export function HeroSlideshow() {
             style={{
               width: index === currentSlide ? '32px' : '12px',
               height: '12px',
-              backgroundColor: index === currentSlide ? '#a3b18a' : 'rgba(255, 255, 255, 0.7)',
+              backgroundColor: index === currentSlide ? '#F8D548' : 'rgba(255, 255, 255, 0.7)',
               border: 'none',
               borderRadius: '6px',
               cursor: 'pointer',

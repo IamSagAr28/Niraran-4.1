@@ -9,7 +9,7 @@ export function HeroSlideshow() {
 
   const slides = [
     {
-      image: "/images/hero/hero-1.png",
+      image: "/images/hero/hero1.jpg",
       tag: "Sustainable Living Made Beautiful",
       title: "Transforming Waste into",
       highlight: "Wonderful Products",
@@ -18,7 +18,7 @@ export function HeroSlideshow() {
       secondaryCTA: "Learn More"
     },
     {
-      image: "/images/hero/hero-2.png",
+      image: "/images/hero/hero2.jpg",
       tag: "Handcrafted Excellence",
       title: "Every Product Tells",
       highlight: "A Story",
@@ -27,13 +27,40 @@ export function HeroSlideshow() {
       secondaryCTA: "Our Story"
     },
     {
-      image: "/images/hero/hero-3.png",
+      image: "/images/hero/hero3.jpg",
       tag: "Join the Movement",
       title: "Building a",
       highlight: "Circular Economy",
       description: "Each purchase contributes to a sustainable future and empowers local communities.",
       primaryCTA: "Get Started",
       secondaryCTA: "Join Workshop"
+    },
+    {
+      image: "/images/hero/hero4.jpg",
+      tag: "New Arrivals",
+      title: "Freshly Crafted",
+      highlight: "Just For You",
+      description: "Check out the latest additions to our sustainable collection.",
+      primaryCTA: "Shop New",
+      secondaryCTA: "See What's New"
+    },
+    {
+      image: "/images/hero/hero5.jpg",
+      tag: "Gifts That Give Back",
+      title: "Meaningful Presents",
+      highlight: "For Every Occasion",
+      description: "Find the perfect eco-friendly gift that makes a difference.",
+      primaryCTA: "Browse Gifts",
+      secondaryCTA: "Gifting Guide"
+    },
+    {
+      image: "/images/hero/hero6.jpg",
+      tag: "Our Commitment",
+      title: "Sustainability in",
+      highlight: "Every Stitch",
+      description: "Learn about our process and our dedication to a greener planet.",
+      primaryCTA: "Our Process",
+      secondaryCTA: "Learn More"
     }
   ];
 
@@ -125,7 +152,7 @@ export function HeroSlideshow() {
             }`}
           >
             <img
-              src={slide.image}
+              src={`${slide.image}?t=${new Date().getTime()}`}
               alt={slide.title}
               className="w-full h-full object-cover"
               onError={() => {

@@ -1,22 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Nivaran - Eco-Friendly Upcycled Products | Sustainable Living</title>
-      <meta name="description" content="Discover Nivaran's collection of eco-friendly upcycled products. Transform waste into beautiful, functional items while contributing to a sustainable future." />
-      <meta name="keywords" content="upcycling, eco-friendly, sustainable, handcrafted, environment-friendly, zero waste, green living, Nivaran" />
-      <meta property="og:title" content="Nivaran - Eco-Friendly Upcycled Products" />
-      <meta property="og:description" content="Transform waste into beautiful, functional items with Nivaran's sustainable upcycled products." />
-      <meta property="og:type" content="website" />
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-      <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    </head>
+<head>
+  <meta charset="UTF-8" />
+  <!-- Content Security Policy to allow Google Sign-In -->
+  <meta http-equiv="Content-Security-Policy" content="default-src * data: blob: 'unsafe-inline' 'unsafe-eval'; 
+             script-src * data: blob: 'unsafe-inline' 'unsafe-eval' 'report-sample'; 
+             script-src-elem * data: blob: 'unsafe-inline' 'unsafe-eval' 'report-sample';
+             style-src * data: blob: 'unsafe-inline'; 
+             font-src * data: blob:; 
+             img-src * data: blob:; 
+             connect-src * data: blob: ws: wss:; 
+             frame-src * data: blob:; 
+             worker-src * data: blob:;">
 
-    <body>
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-    </body>
-  </html>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nivaran - Eco-Friendly Upcycled Products | Sustainable Living</title>
+  <meta name="description"
+    content="Discover Nivaran's collection of eco-friendly upcycled products. Transform waste into beautiful, functional items while contributing to a sustainable future." />
+  <meta name="keywords"
+    content="upcycling, eco-friendly, sustainable, handcrafted, environment-friendly, zero waste, green living, Nivaran" />
+  <meta property="og:title" content="Nivaran - Eco-Friendly Upcycled Products" />
+  <meta property="og:description"
+    content="Transform waste into beautiful, functional items with Nivaran's sustainable upcycled products." />
+  <meta property="og:type" content="website" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+
+
+
+  <!-- CRITICAL: Global error suppression - must run FIRST -->
+  <script>
+    // Catch ALL errors related to storage access
+    window.addEventListener('error', function (e) {
+      if (e.message && (e.message.includes('storage') || e.message.includes('Storage'))) {
+        console.warn('[Suppressed] Storage error:', e.message);
+        e.preventDefault();
+        e.stopPropagation();
+        return true;
+      }
+    }, true);
+
+    // Catch unhandled promise rejections related to storage
+    window.addEventListener('unhandledrejection', function (e) {
+      var message = '';
+      if (e.reason) {
+        if (typeof e.reason === 'string') {
+          message = e.reason;
+        } else if (e.reason.message) {
+          message = e.reason.message;
+        } else if (e.reason.toString) {
+          message = e.reason.toString();
+        }
+      }
+
+      if (message && (message.toLowerCase().includes('storage') || message.toLowerCase().includes('context'))) {
+        console.warn('[Suppressed] Storage promise rejection:', message);
+        e.preventDefault();
+        e.stopPropagation();
+        return true;
+      }
+    }, true);
+  </script>
+
+  <script>
+    // ULTRA-AGGRESSIVE storage patch - runs FIRST, handles ALL edge cases
+    (function () {
+      'use strict';
+
+      function createStorageMock() {
+        var data = {};
+        var mock = {
+          getItem: function (key) {
+            try { return data[key] || null; } catch (e) { return null; }
+          },
+          setItem: function (key, value) {
+            try { data[key] = String(value); } catch (e) { /* ignore */ }
+          },
+          removeItem: function (key) {
+            try { delete data[key]; } catch (e) { /* ignore */ }
+          },
+          clear: function () {
+            try { data = {}; } catch (e) { /* ignore */ }
+          },
+          key: function (i) {
+            try {
+              var keys = Object.keys(data);
+              return keys[i] || null;
+            } catch (e) { return null; }
+          },
+          get length() {
+            try { return Object.keys(data).length; } catch (e) { return 0; }
+          }
+        };
+        return mock;
+      }
+
+      function safelyPatchStorage(storageName) {
+        try {
+          // Try to access the storage
+          var storage = window[storageName];
+          var testKey = '__nivaran_test__';
+
+          // Test if it works
+          storage.setItem(testKey, 'test');
+          storage.removeItem(testKey);
+
+          console.log('[Storage] ' + storageName + ' is accessible');
+          return; // Storage works, no need to patch
+        } catch (e) {
+          // Storage is blocked or restricted
+          console.warn('[Storage] ' + storageName + ' blocked, installing fallback');
+
+          try {
+            // Try to replace with mock
+            delete window[storageName];
+            Object.defineProperty(window, storageName, {
+              value: createStorageMock(),
+              configurable: true,
+              writable: true,
+              enumerable: true
+            });
+            console.log('[Storage] ' + storageName + ' fallback installed');
+          } catch (e2) {
+            console.error('[Storage] Failed to patch ' + storageName + ':', e2);
+          }
+        }
+      }
+
+      // Patch both storages
+      safelyPatchStorage('localStorage');
+      safelyPatchStorage('sessionStorage');
+
+      // Also catch any storage errors globally
+      window.addEventListener('error', function (e) {
+        if (e.message && e.message.includes('storage')) {
+          console.warn('[Storage] Caught storage error:', e.message);
+          e.preventDefault();
+        }
+      });
+    })();
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
+</html>
